@@ -1,0 +1,932 @@
+<?php
+namespace Bacloo\CrmBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Httpfoundation\Response;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
+
+
+use Bacloo\CrmBundle\Entity\Fiche;
+use Bacloo\CrmBundle\Entity\Memo;
+use Bacloo\CrmBundle\Entity\Bcontacts;
+use Bacloo\CrmBundle\Entity\Brappels;
+use Bacloo\CrmBundle\Entity\Event;
+use Bacloo\CrmBundle\Entity\Search;
+use Bacloo\CrmBundle\Entity\Rapsearch;
+use Bacloo\CrmBundle\Entity\Prospot;
+use Bacloo\CrmBundle\Entity\Prospects;
+use Bacloo\CrmBundle\Entity\interresses;
+use Bacloo\UserBundle\Entity\User;
+
+use Bacloo\CrmBundle\Form\FicheType;
+use Bacloo\CrmBundle\Form\MemoType;
+use Bacloo\CrmBundle\Form\BcontactsType;
+use Bacloo\CrmBundle\Form\BrappelsType;
+use Bacloo\CrmBundle\Form\EventType;
+use Bacloo\CrmBundle\Form\SearchType;
+use Bacloo\CrmBundle\Form\RapsearchType;
+use Bacloo\CrmBundle\Form\ProspotType;
+use Bacloo\CrmBundle\Form\ProspectsType;
+
+class CrmController extends Controller
+{
+
+	public function ajouterAction()
+	{
+		// On crée un objet Fiche
+		$fiche = new Fiche;
+		$form = $this->createForm(new FicheType, $fiche);
+		$objUser = $this->get('security.context')->getToken()->getUsername();
+		$today = date('d/m/Y');
+		// On récupère la requête
+		$request = $this->get('request');
+		// On vérifie qu'elle est de type POST
+		if ($request->getMethod() == 'POST') 
+		{
+		// On fait le lien Requête <-> Formulaire
+		// À partir de maintenant, la variable $fiche contient les valeurs entrées dans le formulaire rempli par le visiteur
+		$form->bind($request);
+		// On vérifie que les valeurs entrées sont correctes
+
+			if ($form->isValid()){ 
+				//Avant de persister la fiche, on supprime les collections qui sont entièrement vides
+				foreach ($form->get('event')->getData() as $bee) {
+					if(!isset($bee)){
+						$fiche->getEvent()->clear();
+					}
+				}					
+					
+				foreach ($form->get('bcontacts')->getData() as $bcc) {
+					if(!isset($bcc)){
+						$fiche->getBcontacts()->clear();
+					}				
+				}
+				
+				foreach ($form->get('brappels')->getData() as $brr) {
+					if(!isset($brr)){
+						$fiche->getBrappels()->clear();
+					}
+	
+				}
+				// On enregistre notre objet $fiche dans la base de données		
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($fiche);	
+				$em->flush();
+
+				//On persiste les rappels
+				foreach ($form->get('brappels')->getData() as $br) {
+				  $br->addFiche($fiche);
+				  if(isset($br)){
+					$em->persist($br);
+				  }
+				}
+
+				//On persiste les events
+				foreach ($form->get('event')->getData() as $be) {
+				  $be->addFiche($fiche);
+				  if(isset($be)){
+					$em->persist($be);
+				  }
+				}
+
+				//On persiste les contacts
+				foreach ($form->get('bcontacts')->getData() as $bc) {
+				  $bc->addFiche($fiche);
+				  if(isset($bc)){
+					$em->persist($bc);
+				  }
+				}
+				
+				// on flush le tout
+				$em->flush();	
+				
+				// On définit un message flash sympa
+				$this->get('session')->getFlashBag()->add('info', 'Fiche bien ajouté');			
+				
+				// On redirige vers la page de visualisation de la fiche nouvellement créée
+				return $this->redirect($this->generateUrl('bacloocrm_voir', array('id' => $fiche->getId())));
+			}
+		}
+
+		// À ce stade :
+		// - Soit la requête est de type GET, donc le visiteur vient d'arriver sur la page et veut voir le formulaire
+		// - Soit la requête est de type POST, mais le formulaire n'est pas valide, donc on l'affiche de nouveau
+		return $this->render('BaclooCrmBundle:Crm:ajouter.html.twig', array('form' => $form->createView(),
+																			'date' => $today,
+																			'user' => $objUser));
+	}
+	
+ public function voirAction($id)
+  {
+	$objUser = $this->get('security.context')->getToken()->getUsername();	
+	$em = $this->getDoctrine()->getManager();
+		//Partie fiche interressante
+			$listintfiche  = $em->getRepository('BaclooCrmBundle:interresses')		
+						   ->listintfiche($id);						   
+
+			$tagsfiche  = $em->getRepository('BaclooCrmBundle:Fiche')		
+						   ->besoinsfiche($id);						   
+			
+			$besoins = preg_split("/[\s,]+/", $tagsfiche);
+			
+			//Partie liste
+					$i = 0;
+					foreach($besoins as $besoin)
+					{
+						$i++;
+						$query = $em->createQuery(
+							'SELECT u 
+							FROM BaclooUserBundle:User u
+							WHERE u.username != :username and u.tags LIKE :tags'
+						);
+						$query->setParameter('username', $objUser);
+						$query->setParameter('tags', '%'.$besoin.'%');				
+						$listinter = $query->getResult();//liste des users interressé par cettee fiche					
+						${'listinter'.$i} = $listinter;
+						
+					}
+					$array_besoins = $listinter1;
+					for($j=2;$j<$i;$j++)
+					{
+						if(!isset($array_besoins))
+						{
+							$array_besoins = $listinter.$j;
+						}
+						else
+						{
+							$array_besoins .= ','.$listinter.$j;
+						}
+		
+					}
+					$list_fichespot = array_merge($array_besoins);
+if(empty($list_fichespot)){echo 'list_fichespot est vide';} else {echo 'list_fichespot plein';}
+if(empty($listintfiche)){echo 'listintfiche est vide';} else {echo 'listintfiche plein';}
+
+				if(!empty($listintfiche))
+				{
+					foreach($list_fichespot as $lfp)
+					{
+						foreach($listintfiche as $lif)
+						{
+							if($lfp->username <> $lif->$username)
+							{echo $lfp->username;					
+							$interresses = new interresses();
+							$interresses->setFicheid($id);
+							$interresses->setNom($lfp->GetNom());
+							$interresses->setPrenom($lfp->GetPrenom());
+							$interresses->setUsername($lfp->GetUsername());
+							$interresses->setActivite($lfp->GetActivite());
+							$interresses->setDescRech($lfp->GetDescRech());
+							$interresses->setTags($lfp->GetTags());	
+							$em = $this->getDoctrine()->getManager();
+							$em->persist($interresses);
+							$em->flush();
+							}
+						}
+					}
+				}
+				else
+				{
+					foreach($list_fichespot as $lfp)
+					{			
+							$interresses = new interresses();
+							$interresses->setFicheid($id);
+							$interresses->setNom($lfp->GetNom());
+							$interresses->setPrenom($lfp->GetPrenom());
+							$interresses->setUsername($lfp->GetUsername());
+							$interresses->setActivite($lfp->GetActivite());
+							$interresses->setDescRech($lfp->GetDescRech());
+							$interresses->setTags($lfp->GetTags());	
+							$em = $this->getDoctrine()->getManager();
+							$em->persist($interresses);
+							$em->flush();
+					}				
+				}
+			//Fin partie liste
+			
+			//Début partie compte interressés
+			
+				if($tagsfiche == ''){
+				$countinter = 0;	
+				}
+				else{
+				$i = 0;
+				$listinter = '';
+				$query = $em->createQuery(
+					'SELECT COUNT(i.id) as nbtags
+					FROM BaclooCrmBundle:interresses i
+					WHERE i.ficheid = :ficheid'
+				);
+				$query->setParameter('ficheid', $id);
+		
+				$countinter = $query->getSingleScalarResult();//compte des users interressé par cettee fiche				
+				}
+			
+			//Fin partie compte interressés
+//Fin Partie fiche interressante
+
+
+	// On récupère l'EntityManager
+	$em = $this->getDoctrine()
+			   ->getManager()
+			   ->getRepository('BaclooCrmBundle:Fiche');
+	// On récupère la fiche qui nous intéresse
+
+	$fiche = $em->findOneBy(array('id' => $id,
+								  'user' => $objUser));
+								  
+	if(empty($fiche)){return $this->redirect($this->generateUrl('bacloocrm_search', array()));}
+
+	$today = date('d/m/Y');
+    // --- Comme on a des champs manytomany imbriqués dans le formulaire - 1/3 ---
+    // On place dans un tableau les brappels, les events, les bcontacts que contient la fiche en bdd avant la soumission du formulaire
+    // Si certains d'entre eux n'existent plus après la soumission, il faudra donc les supprimer
+    $listeBr = array();
+    foreach ($fiche->getBrappels() as $br) {
+      $listeBr[] = $br;
+    }
+	
+    $listeBe = array();
+    foreach ($fiche->getEvent() as $be) {
+      $listeBe[] = $be;
+    }	
+
+    $listeBc = array();
+    foreach ($fiche->getBcontacts() as $bc) {
+      $listeBc[] = $bc;
+    }
+	
+    // --- Fin du cas 1/3 ---
+    // On créé le formulaire
+    $form = $this->createForm(new FicheType(), $fiche);
+	// on soumet la requete
+    $request = $this->getRequest();
+	
+    if ($request->getMethod() == 'POST') {
+	// On fait le lien Requête <-> Formulaire
+      $form->bind($request);
+      if ($form->isValid()) {
+	  //Avant de persister la fiche, on supprime les collections qui sont entièrement vides
+				foreach ($form->get('event')->getData() as $bee) {
+					if(!isset($bee) && empty($bee)){
+						$fiche->getEvent()->clear();
+					}
+				}					
+					
+				foreach ($form->get('bcontacts')->getData() as $bcc) {
+					if(!isset($bcc) && empty($bcc)){
+						$fiche->getBcontacts()->clear();
+					}				
+				}
+				
+				foreach ($form->get('brappels')->getData() as $brr) {
+					if(!isset($brr) && empty($brr)){
+						$fiche->getBrappels()->clear();
+					}
+				}
+        // On enregistre la fiche en base de donnée afin d'avoir son id
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($fiche);
+        $em->flush();
+        // --- Comme on a des manytomany imbriqués dans le formulaire - 3/3 ---
+        // On persiste les brappels et autres (propriétaire) maintenant que $fiche a un id
+        foreach ($form->get('brappels')->getData() as $br) {
+			if(isset($br) && !empty($br)){
+			  // $br->addFiche($fiche);
+			  $em->persist($br);
+			}
+        }
+		
+        foreach ($form->get('event')->getData() as $be) {
+			if(isset($be) && !empty($be)){
+			  // $be->addFiche($fiche);
+			  $em->persist($be);
+			}
+        }
+
+        foreach ($form->get('bcontacts')->getData() as $bc) {
+			if(isset($bc) && !empty($bc)){
+			  // $bc->addFiche($fiche);
+			  $em->persist($bc);
+			}
+        }
+		
+        // Et on supprime les brappels qui existaient au début mais plus maintenant
+        foreach ($listeBr as $originalBr) {
+          foreach ($form->get('brappels')->getData() as $rb) {
+            // Si le rappel du formulaire existe déjà en base de données on annule le persist
+            if ($originalBr == $rb) {
+            $em->detach($br); 		
+            }
+			// S'il n'y a pas de rappel dans le formulaire et qu'il y en a un en bdd il s'agit d'une suppression. Donc on enlève celui de la BDD
+			elseif(!empty($originalBr) && empty($rb))
+			{
+
+			}
+			// Si pas de rappel en bdd et pas de rappel dans le formulaire : On détache le persist
+			else{
+
+			}			
+          }        
+        }
+		
+        // Et on supprime les events qui existaient au début mais plus maintenant
+        foreach ($listeBe as $originalBe) {
+          foreach ($form->get('event')->getData() as $eb) {
+            // Si $originalBe existe dans le formulaire, on clear pour eviter d'enregistrer 2 fois les mêmes entrées
+            if ($originalBe == $eb) {
+            $em->detach($be); 			
+            }
+			elseif(!empty($originalBe) && empty($eb))
+			{
+
+			}			
+			else{
+
+			}			
+          }        
+        }		
+
+        // Et on supprime les bcontacts qui existaient au début mais plus maintenant
+        foreach ($listeBc as $originalBc) {
+          foreach ($form->get('bcontacts')->getData() as $cb) {
+            // Si $originalBc existe dans le formulaire, on clear pour eviter d'enregistrer 2 fois les mêmes entrées
+            if ($originalBc == $bc) {
+            $em->detach($cb);		
+            }
+			elseif(!empty($originalBc) && empty($cb))
+			{
+			}			
+			else{
+			}				
+          }        
+        }
+		
+        $em->flush();
+        // --- Fin du cas 3/3 ---
+		// nous préparons les paramètres pour le formulaire afin de savoir si le formulaire est vide ou pas
+			if (isset($bc)){
+				$cb=1;
+				}
+				else{
+				$cb=0;	
+				}
+
+			if (isset($br)){
+				$rb=1;
+				}
+				else{
+				$rb=0;	
+				}	
+				
+			if (isset($be)){
+				$eb=1;
+				}
+				else{
+				$eb=0;	
+				}		
+        // On définit un message flash
+        
+        return $this->redirect($this->generateUrl('bacloocrm_voir', array('id' => $fiche->getId(),
+																	)));
+      }
+    }
+// nous préparons les paramètres pour le formulaire afin de savoir si le formulaire est vide ou pas
+if (isset($bc)){
+	$cb=1;
+	}
+	else{
+	$cb=0;	
+	}
+
+if (isset($br)){
+	$rb=1;
+	}
+	else{
+	$rb=0;	
+	}	
+	
+if (isset($be)){
+	$eb=1;
+	}
+	else{
+	$eb=0;	
+	}
+	
+    return $this->render('BaclooCrmBundle:Crm:voir.html.twig', array(
+      'form'    => $form->createView(),
+	  'countinter' => $countinter,
+	  'id' => $fiche->getId(),
+      'fiche' => $fiche,
+	  'date' => $today,
+	  'user' => $objUser,
+	  'cb' => $cb,
+	  'eb' => $eb,
+	  'rb' => $rb	  
+    ));
+  }
+  
+ 	public function searchAction()
+		{
+		// Pour récupérer le service UserManager du bundle
+		$objUser = $this->get('security.context')->getToken()->getUsername();
+		echo 'user'.$objUser;
+		
+		// On crée un objet Search
+		$search = new Search;
+		$form = $this->createForm(new SearchType(), $search);
+		$request = $this->getRequest();
+			if ($request->getMethod() == 'POST') {
+			  $form->bind($request);
+				  if ($form->isValid()) {
+					// On Flush la recherche
+					$em = $this->getDoctrine()->getManager();
+					$em->persist($search);		
+					// on flush le tout
+					$em->flush();						
+					// On définit un message flash sympa
+					$this->get('session')->getFlashBag()->add('info', 'votre recherche a été soumise');								
+					// On redirige vers la page de visualisation de recherche
+					//ici l'array doit se constituer en fonction des champs de formulaire remplis
+					$id = $search->getid();
+					return $this->redirect($this->generateUrl('bacloocrm_find', array('id' => $id )
+					));
+				}
+			}
+		return $this->render('BaclooCrmBundle:Crm:search.html.twig', array('form' => $form->createView()));			
+		} 	
+		
+		public function search2Action()
+		{
+		// On crée un objet Search
+		$search = new Search;
+		$form = $this->createForm(new SearchType(), $search);
+		$request = $this->getRequest();
+			if ($request->getMethod() == 'POST') {
+			  $form->bind($request);
+				  if ($form->isValid()) {
+					// On Flush la recherche
+					$em = $this->getDoctrine()->getManager();
+					$em->persist($search);		
+					// on flush le tout
+					$em->flush();						
+					// On définit un message flash sympa
+					$this->get('session')->getFlashBag()->add('info', 'votre recherche a été soumise');								
+					// On redirige vers la page de visualisation de recherche
+					//ici l'array doit se constituer en fonction des champs de formulaire remplis
+					$id = $search->getid();
+					return $this->redirect($this->generateUrl('bacloocrm_find', array('id' => $id )
+					));
+				}
+			}
+		return $this->render('BaclooCrmBundle:Crm:searchfiche.html.twig', array('form' => $form->createView()));			
+		}	
+
+// le paramètre de l'action doit se remplir en fonction des critères de recherche		
+ 	public function findAction($id, $page)
+		{
+			// On récupère l'EntityManager
+			$em = $this->getDoctrine()
+					   ->getManager();
+			    $search = $em->getRepository('BaclooCrmBundle:Search')->find($id);
+				$ficheid = $search->getFicheid();
+				$raisonSociale = $search->getRaisonSociale();
+				$nom = $search->getNom();
+				$user = $this->get('security.context')->getToken()->getUsername();
+				echo 'user'.$user;
+				$fiche = new Fiche;
+				$em = $this->getDoctrine()->getManager();
+				$resultats = $em->getRepository('BaclooCrmBundle:Fiche')
+							->searchfiche($ficheid, $raisonSociale, $nom, 3, $page, $user);
+				if(!empty($resultats )){
+					// On crée un objet Search
+					$search = new Search;
+					$form = $this->createForm(new SearchType(), $search);
+					$request = $this->getRequest();
+						if ($request->getMethod() == 'POST') {
+						  $form->bind($request);
+							  if ($form->isValid()) {
+								// On Flush la recherche
+								$em = $this->getDoctrine()->getManager();
+								$em->persist($search);		
+								// on flush le tout
+								$em->flush();	
+								
+								// On définit un message flash sympa
+								$this->get('session')->getFlashBag()->add('info', 'votre recherche a été soumise');			
+								
+								// On redirige vers la page de visualisation de recherche
+								return $this->redirect($this->generateUrl('bacloocrm_find', array('id' => $search->getFicheid())));//getID ?? non ?
+							}
+						}						
+				
+					return $this->render('BaclooCrmBundle:Crm:search.html.twig', array(
+							'id' => $id,
+							'page' => $page,
+							'nombrePage' => ceil(count($resultats)/3),
+							'resultats' => $resultats, // C'est ici tout l'intérêt : le contrôleur passe les variables nécessaires au template !
+							'form' => $form->createView()
+					));
+				}
+				else{
+					// On crée un objet Search
+					$search = new Search;
+					$form = $this->createForm(new SearchType(), $search);
+					$request = $this->getRequest();
+						if ($request->getMethod() == 'POST') {
+						  $form->bind($request);
+							  if ($form->isValid()) {
+								// On Flush la recherche
+								$em = $this->getDoctrine()->getManager();
+								$em->persist($search);		
+								// on flush le tout
+								$em->flush();	
+								
+								// On définit un message flash sympa
+								$this->get('session')->getFlashBag()->add('info', 'votre recherche a été soumise');			
+								
+								// On redirige vers la page de visualisation de recherche
+								return $this->redirect($this->generateUrl('bacloocrm_find', array('id' => $search->getFicheid())));
+							}
+						}
+					return $this->render('BaclooCrmBundle:Crm:search.html.twig', array('form' => $form->createView(),));			
+				}
+			
+		}
+
+		public function searchrappelsAction(){
+		$user = $this->get('security.context')->getToken()->getUsername();
+		// Avant de lancer une recherche on vide la table rapsearch
+		$em = $this->getDoctrine()->getManager();
+		$rapsearch = $em->getRepository('BaclooCrmBundle:Rapsearch')->findAll();//plus tard dans rapsearchtype ajouter la methode de sélection par user
+		foreach($rapsearch as $rap){
+		$em-> remove($rap);
+		}
+		$em->flush();
+		$rapsearch = new Rapsearch;
+			$form = $this->createForm(new RapsearchType(), $rapsearch);
+			$request = $this->getRequest();
+				if ($request->getMethod() == 'POST') {
+				  $form->bind($request);
+					  if ($form->isValid()) {//echo 'rempli';
+					// On Flush la recherche
+					$em = $this->getDoctrine()->getManager();
+					$em->persist($rapsearch);		
+					// on flush le tout
+					$em->flush();						
+					// On définit un message flash sympa
+					$this->get('session')->getFlashBag()->add('info', 'votre recherche a été soumise');								
+					// On redirige vers la page de visualisation de recherche
+					//ici l'array doit se constituer en fonction des champs de formulaire remplis
+					// $du = $rapsearch->getdu();
+					// $au= $rapsearch->getAu();
+					$id= $rapsearch->getid();					
+					//$em->remove($rapsearch);
+							return $this->redirect($this->generateUrl('bacloocrm_showrappels', array('id' => $id)
+																							  ));
+					}
+				}
+				else{
+				//echo'vide';				
+					$du = '2013-01-01';
+					$au = date('Y-m-d');
+					$fiche = new Fiche;
+					$em = $this->getDoctrine()->getManager();		
+					$fiche = $em->getRepository('BaclooCrmBundle:Fiche')
+					->searchrap($du, $au, 10, $page=1, $user);
+					$id = 0;
+					return $this->render('BaclooCrmBundle:Crm:searchdate.html.twig', array(
+					'id' => $id,
+					'page' => $page,
+					'nombrePage' => ceil(count($fiche)/10),					
+					'fiche' => $fiche, // C'est ici tout l'intérêt : le contrôleur passe les variables nécessaires au template !
+					'du' => $du,
+					'au'=> $au,
+					'user' => $user,
+					'form' => $form->createView()
+					));	
+				}
+		}
+		
+		public function showrappelsAction($id, $page){
+		$user = $this->get('security.context')->getToken()->getUsername();
+		if($id == 0){
+				$em = $this->getDoctrine()->getManager();
+				$rapsearch = new Rapsearch;
+				$du = '2013-01-01';
+				$au = date('Y-m-d');
+				$fiche = new Fiche;				
+				$resultrap = $em->getRepository('BaclooCrmBundle:Fiche')
+							->searchrap($du, $au, 10, $page, $user);
+		}
+		else{
+				$em = $this->getDoctrine()->getManager();
+				$rapsearch = $em->getRepository('BaclooCrmBundle:Rapsearch')->find($id);
+				$du = $rapsearch->getDu();
+				$au = $rapsearch->getAu();
+				$fiche = new Fiche;				
+				$resultrap = $em->getRepository('BaclooCrmBundle:Fiche')
+							->searchrap($du, $au, 10, $page, $user);				
+				// $listeBr = array();
+				// foreach ($fiche->getBrappels() as $br) {
+				  // $listeBr[] = $br;
+				// }
+		}								
+				if(!empty($resultrap)){//echo'toto';			
+					$form = $this->createForm(new RapsearchType(), $rapsearch);
+					$request = $this->getRequest();
+						if ($request->getMethod() == 'POST') {
+						  $form->bind($request);
+							  if ($form->isValid()) {//echo 'rempli';
+							// On Flush la recherche
+							$em = $this->getDoctrine()->getManager();
+							$em->persist($rapsearch);		
+							// on flush le tout
+							$em->flush();						
+							// On définit un message flash sympa
+							$this->get('session')->getFlashBag()->add('info', 'votre recherche a été soumise');								
+							// On redirige vers la page de visualisation de recherche
+							//ici l'array doit se constituer en fonction des champs de formulaire remplis
+							$du = $rapsearch->getdu();
+							$au= $rapsearch->getAu();
+							$id= $rapsearch->getid();					
+
+									return $this->redirect($this->generateUrl('bacloocrm_showrappels', array('id' => $id)
+																									  ));
+							}
+						}						
+				
+					return $this->render('BaclooCrmBundle:Crm:search2.html.twig', array(
+							'resultrap' => $resultrap,
+							'page' => $page,
+							'nombrePage' => ceil(count($resultrap)/10),							
+							'fiche' => $fiche,
+							'id' => $id,
+							'form' => $form->createView()
+					));//echo 'rempshow';
+				}
+				else{//echo 'pas remp';
+					$du = '2013-01-01';
+					$au = date('Y-m-d');
+					$fiche = new Fiche;
+					$em = $this->getDoctrine()->getManager();		
+					$fiche = $em->getRepository('BaclooCrmBundle:Fiche')
+								->searchrap($du, $au, 10, $page, $user);
+						$rapsearch = new Rapsearch;
+						$form = $this->createForm(new RapsearchType(), $rapsearch);
+						$request = $this->getRequest();
+							if ($request->getMethod() == 'POST') {
+							  $form->bind($request);
+								  if ($form->isValid()) {
+										$du = $rapsearch->getdu();
+										$au = $rapsearch->getau();
+										return $this->redirect($this->generateUrl('bacloocrm_showrappels', array('id' => $id)
+																										  ));
+								}
+							}
+						return $this->render('BaclooCrmBundle:Crm:search2.html.twig', array(
+							'resultrap' => $resultrap,
+							'page' => $page,
+							'nombrePage' => ceil(count($resultrap)/10),							
+							'fiche' => $fiche,
+							'id' => $id,
+							'form' => $form->createView()
+						));		
+				}
+		}
+		
+		public function showprospotAction()
+		{
+			$usersess = $this->get('security.context')->getToken()->getUsername();//Récupère le nom d'utilisateur
+
+			$em = $this->getDoctrine()->getManager();
+			$query = $em->createQuery(
+				'SELECT u.tags
+				FROM BaclooUserBundle:User u
+				WHERE u.username != :username'
+			)->setParameter('username', $usersess);
+
+			$tabtags = $query->getSingleScalarResult();
+				if(empty($tabtags)){
+					$fiche = 0;
+				}
+				else
+				{
+					$tags = explode(",", $tabtags);
+					$fiche = $em->getRepository('BaclooCrmBundle:Fiche')
+								->count_prospot($tags, $usersess);
+					$newprosplist = $em->getRepository('BaclooCrmBundle:Fiche')
+								->count_prospotlist($tags, $usersess);
+					$prospotalist = $em->getRepository('BaclooCrmBundle:Prospot')
+								->count_prospotalist($usersess);
+								
+					// on vérifie si chaque nouveau propsect n'a pas deja été proposé dans prospot
+					$i = 0;
+					foreach($newprosplist as $np)
+					{
+					$i++;
+						foreach($prospotalist as $pl)
+						{
+							$rsnew = $np->getRaisonSociale();
+							$rsold = $pl->getRaisonSociale();
+							if($rsnew == $rsold)
+							{
+								$i = $i-1;	
+							}
+						}
+						
+					}
+				
+				}
+				return $this->render('BaclooCrmBundle:Crm:opportunity.html.twig', array(
+							'prospot' => $i
+						));							
+		}
+		
+		public function showprospotlistAction()
+		{
+		//Début ajout des prospects
+					$usersess = $this->get('security.context')->getToken()->getUsername();//Récupère le nom d'utilisateur
+					// On récupère les tags de l'utilisateur connecté
+					$em = $this->getDoctrine()->getManager();
+					$query = $em->createQuery(
+						'SELECT u.tags
+						FROM BaclooUserBundle:User u
+						WHERE u.username = :username'
+					)->setParameter('username', $usersess);
+
+					$tabtags = $query->getSingleScalarResult();
+						if(empty($tabtags)){
+							$fiche = 0;//si pas de tags alors pas de prospects
+						}
+						else
+						{
+						// si tags, on sort les prospects qu'on stock dans $fiche (instance de Fiche)
+							$tags = explode(",", $tabtags);
+							$fiche = $em->getRepository('BaclooCrmBundle:Fiche')
+										->prospotlist($tags, $usersess);// on obtient la liste des prospects
+						}
+					//On récupère l'id de l'utilisateur connecté
+
+					$query = $em->createQuery(
+						'SELECT u.id
+						FROM BaclooUserBundle:User u
+						WHERE u.username = :username'
+					)->setParameter('username', $usersess);
+					$uid = $query->getSingleScalarResult();	
+
+					//On récupère les anciens prosppects proposés
+					$em2 = $this->getDoctrine()
+							   ->getManager()
+							   ->getRepository('BaclooCrmBundle:Prospects');
+					$prospota = $em2->findOneByUserid($uid);
+					
+					//On récupère les anciens prospot proposés
+					$em = $this->getDoctrine()
+							   ->getManager()
+							   ->getRepository('BaclooCrmBundle:Prospot');
+					$prospotaa = $em->findByUser(array(
+												'user'=>$usersess,
+												'voir'=>'ok'));					
+					if(empty($prospota))//Si pas de prospects dans la bdd on en créée un
+					{
+						//On enregistre le userid dans prospects
+						$prospects = new Prospects();
+						$prospects->setUserid($uid);
+						$em = $this->getDoctrine()->getManager();
+						$em->persist($prospects);
+				
+					}
+					
+					//Maintenant que prospect a son uid on enregistre les prospots
+					//pour chaque prospect proposé, on regarde s'il a déjà été proposé
+					
+					foreach($fiche as $fic)// pour chaque fiche trouvée
+					{
+						if(isset($prospotaa) && !empty($prospotaa))// Si on a des prospot dans la bdd on compare aux nouveaux avant d'ajouter
+						{echo'Si on a des prospot dans la bdd on compare avant d\'ajouter';
+						$em = $this->getDoctrine()
+							   ->getManager()
+							   ->getRepository('BaclooCrmBundle:Prospot');
+						$prospotok = $em->findOneBy(array('RaisonSociale' => $fic->GetRaisonSociale()));					
+
+	
+									if(empty($prospotok)) // si nouveau prospect pas dans bdd
+									{
+										$prospot = new Prospot();
+										$prospot->setRaisonSociale($fic->GetRaisonSociale());
+										$prospot->setActivite($fic->GetActivite());
+										$prospot->setBesoins($fic->GetTags());
+										$prospot->setCp($fic->GetCp());
+										$prospot->setVille($fic->GetVille());
+										$prospot->setVendeur($fic->GetUser());	
+										$prospot->setUser($usersess);	
+										$prospot->setVoir('ok');
+										$prospot->addProspect($prospota);
+										$prospota->addProspot($prospot);
+										$em = $this->getDoctrine()->getManager();
+											$em->persist($prospot);	
+											$em->persist($prospota);	
+											$em->flush();										
+									}
+
+
+						}
+						else // si pas de prospot dans la bdd on insere
+						{echo 'si pas de prospot dans la bdd on insere';
+										$prospot = new Prospot();
+										$prospot->setRaisonSociale($fic->GetRaisonSociale());
+										$prospot->setActivite($fic->GetActivite());
+										$prospot->setBesoins($fic->GetTags());
+										$prospot->setCp($fic->GetCp());
+										$prospot->setVille($fic->GetVille());
+										$prospot->setVendeur($fic->GetUser());	
+										$prospot->setUser($usersess);	
+										$prospot->setVoir('ok');
+										$prospot->addProspect($prospects);
+										$prospects->addProspot($prospot);
+										$em = $this->getDoctrine()->getManager();
+											$em->persist($prospot);	
+											$em->persist($prospects);	
+											$em->flush();							
+						}
+					}		
+													
+		//Fin ajout des prospects		
+
+					$em2 = $this->getDoctrine()
+							   ->getManager()
+							   ->getRepository('BaclooCrmBundle:Prospot');
+					$prospo = $em2->findByUser($usersess);
+					
+					$em2 = $this->getDoctrine()
+							   ->getManager()
+							   ->getRepository('BaclooCrmBundle:Prospects');
+					$prospota = $em2->findOneByUserid($uid);					
+				
+			// On créé le formulaire	
+			$form = $this->createForm(new ProspectsType(), $prospota);
+			// on soumet la requete
+			$request = $this->getRequest();
+			echo 'avant post';
+			if ($request->getMethod() == 'POST') {echo 'method post';
+			// On fait le lien Requête <-> Formulaire
+			  $form->bind($request);
+			  if ($form->isValid()) 
+			  {echo 'form valide';
+					//on rend invisible les prospot qui ont été suppr
+					foreach ($prospo as $originalBr) {//pour chaque prospot en bdd
+					  foreach ($form->get('prospot')->getData() as $rb) 
+					  {//On compare aux prospot envoyés par le formulaire
+						if ($originalBr == $rb) {
+						}
+						// Si pas de rappel en bdd et pas de rappel dans le formulaire : On détache le persist
+						else{
+						$originalBr->SetVoir('non');
+									$em = $this->getDoctrine()
+										   ->getManager();
+									$em->detach($rb);	
+									$em->detach($prospota);	
+										  $em->flush();
+						}			
+					  }        
+					}	
+						// On enregistre les prospects en base de donnée afin d'avoir son id
+				}
+			}
+						
+					return $this->render('BaclooCrmBundle:Crm:opportunity_list.html.twig', array(
+									'form'    => $form->createView()));		
+
+	}
+
+	public function showlistficheint($id)
+	{
+				$em = $this->getDoctrine()
+					   ->getManager();		
+	
+				$query = $em->createQuery(
+					'SELECT f.raisonSociale
+					FROM BaclooCrmBundle:Fiche f
+					WHERE f.id = :id'
+				);
+				$query->setParameter('id', $id);
+		
+				$raisonsociale = $query->getSingleScalarResult();//compte des users interressé par cettee fiche				
+
+				$query = $em->createQuery(
+					'SELECT i
+					FROM BaclooCrmBundle:interresses i
+					WHERE i.ficheid = :ficheid'
+				);
+				$query->setParameter('ficheid', $id);
+		
+				$countinter = $query->getResult();//compte des users interressé par cettee fiche				
+
+					return $this->render('BaclooCrmBundle:Crm:interresses_list.html.twig', array(
+									'countinter'    => $countinter
+									'raisonsociale'	=> $raisonsociale
+									));					
+	}
+}

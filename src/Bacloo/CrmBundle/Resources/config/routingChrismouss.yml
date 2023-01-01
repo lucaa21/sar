@@ -1,0 +1,261 @@
+bacloocrm_accueil:
+    path:     /
+    defaults: { _controller: FOSUserBundle:Security:login}
+
+bacloocrm_home:
+    path:     /accueil/{useracc}
+    defaults: { _controller: BaclooCrmBundle:Crm:accueil, useracc:'chrismouss' }
+
+bacloocrm_ajouter:
+    path:     /ajouter
+    defaults: { _controller: BaclooCrmBundle:Crm:ajouter }
+
+bacloocrm_voir:
+    path:	  /voir/fiche/{id}
+    defaults: { _controller: BaclooCrmBundle:Crm:voir }
+    requirements:
+        id:   \d+
+
+bacloocrm_search:
+    path:	  /search/{page}/{view}/{init}/{vue}/{speed}
+    defaults: { _controller: BaclooCrmBundle:Crm:search, page: 1, view: 'def', init: 2, vue: 'def', speed: '0' }
+
+bacloocrm_search2:
+    path:	  /search2/{vue}/{speed}
+    defaults: { _controller: BaclooCrmBundle:Crm:search, 'vue': 'def', 'speed': '0' }
+
+bacloocrm_searchbacloo:
+    path:	  /recherche/prospects/{mode}
+    defaults: { _controller: BaclooCrmBundle:Crm:searchbacloo, mode:'init' }
+
+bacloocrm_searchuser:
+    path:	  /recherche/utilisateur/mode/{mode}
+    defaults: { _controller: BaclooCrmBundle:Crm:searchuser}
+
+bacloocrm_find:
+    path:	  /find/fiche/{id}/{page}/{view}/{speed}
+    defaults: { _controller: BaclooCrmBundle:Crm:find, page: 1, view:'client', speed: '0' }
+
+bacloocrm_findbacloo:
+    path:	  /trouver/prospects/{id}/{mode}/{toc}/{page}/{insert}
+    defaults: { _controller: BaclooCrmBundle:Crm:findbacloo, page: 1, toc:'null', insert: 'ok' }
+
+bacloocrm_finduser:
+    path:	  /trouver/utilisateur/{id}/{page}/{mode}
+    defaults: { _controller: BaclooCrmBundle:Crm:finduser, page: 1 }
+
+bacloocrm_searchrappels:
+    path:	  /searchrappels/{idsearchrap}/{page}/{vue}/{speed}
+    defaults: { _controller: BaclooCrmBundle:Crm:searchrappels, page: 1, idsearchrap : 0, vue:'rappels', speed: '0' }
+
+bacloocrm_showrappels:
+    path:	  /voir_les_rappels/{page}/{pagesr}/{id}/{vue}
+    defaults: { _controller: BaclooCrmBundle:Crm:showrappels, page: 1, pagesr: 1 }
+
+bacloocrm_showprospotlist:
+    path:	  /liste_prospects_potentiels/{page}/{nbresult}/{insert}
+    defaults: { _controller: BaclooCrmBundle:Crm:showrappels, page: 1, pagesr: 1 }
+
+bacloocrm_showfavoris:
+    path:	  /liste_des_collegues
+    defaults: { _controller: BaclooCrmBundle:Crm:showfavoris}
+
+bacloocrm_ajouterfavoris:
+    path:	  /ajouter_collegue/{favuserid}/{mode}
+    defaults: { _controller: BaclooCrmBundle:Crm:ajouterfavoris, mode:'collegue'}
+
+bacloocrm_showbacloolist:
+    path:	  /liste_des_prospects_a_acheter/{id}/{mode}/{page}/{toc}/{insert}
+    defaults: { _controller: BaclooCrmBundle:Crm:showbacloolist, toc: 'null', find: 'nok', insert: 'ok'}
+
+bacloocrm_showlistficheint:
+    path:	  /liste_utilistateurs_interesses_par_la_fiche/{id}
+    defaults: { _controller: BaclooCrmBundle:Crm:showlistficheint}
+
+bacloocrm_listficheint:
+    path:	  /liste_fiches_vendables
+    defaults: { _controller: BaclooCrmBundle:Crm:listficheint}
+
+bacloocrm_sendmessage:
+    path:	  /envoyer_message/{vemail}/{type}/{rais}
+    defaults: { _controller: BaclooCrmBundle:Crm:sendmessage}
+
+bacloocrm_sendmessagefav:
+    path:	  /message/{vemail}/{type}/{rais}
+    defaults: { _controller: BaclooCrmBundle:Crm:sendmessagefav}
+
+bacloocrm_buyfiche:
+    path:	  /acheter/{ficheid}/{vendeur}/{typev}
+    defaults: { _controller: BaclooCrmBundle:Crm:buyfiche}
+
+bacloocrm_donnerfiche:
+    path:	  /donner/fiche/{ficheid}/{username}
+    defaults: { _controller: BaclooCrmBundle:Crm:donnerfiche}
+
+bacloocrm_donemail:
+    path:	  /par_email/fiche/{id}
+    defaults: { _controller: BaclooCrmBundle:Crm:donemail}
+
+bacloocrm_senddetmessage:
+    path:	  /repondre_au_message/{id}/{destid}
+    defaults: { _controller: BaclooCrmBundle:Crm:senddetmessage}
+
+bacloocrm_showachats:
+    path:	  /mes_achats/{dix}
+    defaults: { _controller: BaclooCrmBundle:Crm:showachats, dix: 1 }
+
+bacloocrm_publicprofile:
+    path:	  /profile_utilisateur/{user}
+    defaults: { _controller: BaclooCrmBundle:Crm:publicprofile}
+
+bacloocrm_acheter_credits:
+    path:	  /acheter_des_credits
+    defaults: { _controller: PaymentBundle:Payment:preparePaypalExpressCheckoutPayment}
+
+bacloocrm_contact:
+    path:	  /contact
+    defaults: { _controller: BaclooCrmBundle:Crm:contact}
+
+bacloocrm_contact2:
+    path:	  /nous_contacter
+    defaults: { _controller: BaclooCrmBundle:Crm:contact2}
+
+bacloocrm_conditions_generales:
+    path:	  /conditions_generales
+    defaults: { _controller: BaclooCrmBundle:Crm:conditions}
+
+bacloocrm_conditions_generales_public:
+    path:	  /conditions_generales_utilisation
+    defaults: { _controller: BaclooCrmBundle:Crm:conditionspub}
+
+bacloocrm_store:
+    path:	  /boutique_credits/
+    defaults: { _controller: BaclooCrmBundle:Crm:store}
+
+bacloocrm_paypal:
+    path:	  /boutique_credits/{prix}/{description}
+    defaults: { _controller: PaymentBundle:Payment:preparePaypalExpressCheckoutPayment}
+
+bacloocrm_mesmessages:
+    path:	  /mon_compte/mes_messages
+    defaults: { _controller: BaclooCrmBundle:Crm:showmessages }
+
+bacloocrm_showventes:
+    path:	  /mes_ventes
+    defaults: { _controller: BaclooCrmBundle:Crm:showventes }
+
+bacloocrm_showachatscredits:
+    path:	  /mes_achats_de_credits
+    defaults: { _controller: BaclooCrmBundle:Crm:showachatscredits }
+
+bacloocrm_import:
+    path:	  /importer_des_donnees
+    defaults: { _controller: BaclooCrmBundle:Crm:import }
+
+bacloocrm_export:
+    path:	  /exporter_des_donnees
+    defaults: { _controller: BaclooCrmBundle:Crm:export }
+
+bacloocrm_showpartpotlist:
+    path:	  /liste_des_partenaires_potentiels/{modepart}/{page}
+    defaults: { _controller: BaclooCrmBundle:Crm:partenaires, page: 1 }
+
+bacloocrm_showpartlist:
+    path:	  /liste_des_partenaires/{modepart}/{page}
+    defaults: { _controller: BaclooCrmBundle:Crm:partenaires, page: 1 }
+
+bacloocrm_removepart:
+    path:	  /suppression_partenaire/{id}/{page}
+    defaults: { _controller: BaclooCrmBundle:Crm:removepart, page: 1 }
+
+bacloocrm_nofollowpart:
+    path:	  /ne_pas_suivre_partenaire/{id}
+    defaults: { _controller: BaclooCrmBundle:Crm:nofollowpart }
+
+bacloocrm_followpart:
+    path:	  /suivre_partenaire/{id}
+    defaults: { _controller: BaclooCrmBundle:Crm:followpart }
+
+bacloocrm_askpart:
+    path:	  /demande_partenariat/{id}/{partpotid}/{modepart}
+    defaults: { _controller: BaclooCrmBundle:Crm:askpart }
+
+bacloocrm_publish:
+    path:	  /articles/{artvue}
+    defaults: { _controller: BaclooCrmBundle:Crm:publisharticle }
+
+bacloocrm_editarticle:
+    path:	  /articles/modification/{id}
+    defaults: { _controller: BaclooCrmBundle:Crm:editarticle }
+
+bacloocrm_sharearticle:
+    path:	  /articles/partage/{id}
+    defaults: { _controller: BaclooCrmBundle:Crm:share }
+
+bacloocrm_removearticle:
+    path:	  /articles/suppression/{id}
+    defaults: { _controller: BaclooCrmBundle:Crm:removeart }
+
+bacloocrm_replyarticle:
+    path:	  /articles/reply/{id}
+    defaults: { _controller: BaclooCrmBundle:Crm:replyart }
+
+bacloocrm_removefiche:
+    path:	  /supprimer/fiche/{id}/{check}
+    defaults: { _controller: BaclooCrmBundle:Crm:removefiche, check: 0 }
+
+bacloocrm_showlistinvitations:
+    path:	  /liste_de_mes_invitaions/{page}
+    defaults: { _controller: BaclooCrmBundle:Crm:showlistinvitations, page: 1 }
+
+bacloocrm_speedpartage:
+    path:	  /speedpartage/{id}
+    defaults: { _controller: BaclooCrmBundle:Crm:speedpartage }
+
+bacloocrm_showlistfilleuls:
+    path:	  /liste_de_mes_filleuls/{page}
+    defaults: { _controller: BaclooCrmBundle:Crm:showlistfilleuls, page: 1 }
+
+bacloocrm_modules:
+    path:	  /mes_modules
+    defaults: { _controller: BaclooCrmBundle:Crm:modules }
+
+bacloocrm_user_restreint:
+    path:	  /utilisation_restreinte
+    defaults: { _controller: BaclooCrmBundle:Crm:Controlesbb }
+
+bacloocrm_utilisateurs:
+    path:	  /gerer_les_utilisateurs/{dix}
+    defaults: { _controller: BaclooCrmBundle:Crm:gerer_utilisateurs, dix: 1 }
+
+bacloocrm_societe:
+    path:	  /societe
+    defaults: { _controller: BaclooCrmBundle:Crm:societe }
+
+bacloocrm_colleguetemp:
+    path:	  /societe
+    defaults: { _controller: BaclooCrmBundle:Crm:colleguetemp }
+
+bacloocrm_gdrive:
+    path:	  /google_drive/{id}
+    defaults: { _controller: BaclooCrmBundle:Crm:gdrive }
+
+bacloocrm_showpipeline:
+    path:	  /mon_tunnel_de_vente
+    defaults: { _controller: BaclooCrmBundle:Crm:showpipeline}
+
+bacloocrm_communication:
+    path:	  /communication
+    defaults: { _controller: BaclooCrmBundle:Crm:communication}
+
+bacloocrm_listuser:
+    path:	  /listuser/{useracc}
+    defaults: { _controller: BaclooCrmBundle:Crm:listuser, useracc: 'societe' }
+
+bacloocrm_listusercr:
+    path:	  /listusercr/{useracc}
+    defaults: { _controller: BaclooCrmBundle:Crm:listusercr, useracc: 'societe' }
+
+bacloocrm_cr:
+    path:	  /compte_rendu/{page}
+    defaults: { _controller: BaclooCrmBundle:Crm:showcr, page: 1 }

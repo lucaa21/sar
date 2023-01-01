@@ -1,0 +1,5 @@
+services:
+    bacloo_user.registration.form.type:
+        class: Bacloo\UserBundle\Form\Type\RegistrationFormType
+        tags:
+            - { name: form.type, alias: bacloo_user_registration }

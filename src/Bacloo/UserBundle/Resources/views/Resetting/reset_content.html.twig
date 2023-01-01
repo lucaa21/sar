@@ -1,0 +1,31 @@
+<p>Veuillez saisir un nouveau mot de passe</p>
+<form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="POST" class="fos_user_resetting_reset">
+			<div class="form-group">
+			  <div class="col-md-12">
+				<div class="input-group">
+				  <span class="input-group-addon large">Nouveau        </span>
+				  {{ form_widget(form.new.first, { 'attr' : { 'class' : 'form-control' } })  }}
+				</div>    
+			  </div>
+			  {{ form_errors(form.new.first) }} 
+			</div>
+
+			<br><br>
+				
+			<div class="form-group">
+			  <div class="col-md-12">
+				<div class="input-group">
+				  <span class="input-group-addon large">Confirmation</span>
+				  {{ form_widget(form.new.second, { 'attr' : { 'class' : 'form-control' } })  }}
+				</div>
+			  </div>
+			 {{ form_errors(form.new.second) }}  
+			</div>
+
+			<br><br>
+
+			{{ form_row(form._token) }}
+    <div>
+		<input type="submit" class="btn btn-primary" value="{{ 'resetting.reset.submit'|trans({}, 'FOSUserBundle') }}" />
+    </div>
+</form>

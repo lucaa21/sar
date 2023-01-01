@@ -1,0 +1,561 @@
+
+{# src/Bacloo/CrmBundle/Resources/views/Blog/search.html.twig #}
+{% extends "BaclooCrmBundle::layout.html.twig" %}
+{% block body %}
+	<div class="row clearfix">
+		<div class="col-md-12">
+                <ul class="nav nav-tabs">
+                {% if onglet == 'missions' %}
+                    <li class="active"><a href="#tab1default" data-toggle="tab"><h5>Missions</h5></a></li>
+                    <li><a href="#tab2default" data-toggle="tab"><h5>Profils</h5></a></li>
+                    <li><a href="#tab3default" data-toggle="tab"><h5>Candidatures</h5></a></li>
+                {% elseif onglet == 'profils' %}
+                    <li><a href="#tab1default" data-toggle="tab"><h5>Missions</h5></a></li>
+                    <li class="active"><a href="#tab2default" data-toggle="tab"><h5>Profils</h5></a></li>
+                    <li><a href="#tab3default" data-toggle="tab"><h5>Candidatures</h5></a></li>    
+                {% else %}  
+                    <li><a href="#tab1default" data-toggle="tab"><h5>Missions</h5></a></li>
+                    <li><a href="#tab2default" data-toggle="tab"><h5>Profils</h5></a></li>
+                    <li class="active"><a href="#tab3default" data-toggle="tab"><h5>Candidatures</h5></a></li>    
+                {% endif %} 
+                </ul>
+                <div class="tab-content">
+                {% if onglet == 'missions' %}
+                    <div class="tab-pane fade in active" id="tab1default">  
+                {% else %}
+                    <div class="tab-pane fade" id="tab1default">  
+                {% endif %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Nouvelle mission
+                                </h3>
+                            </div>
+                            {#Formulaire saisie mission#}
+                            <div class="panel-body">   
+                                <form class="form-horizontal" action="{{ path('bacloocrm_agence') }}" method="post" {{form_enctype(form) }}>
+                                    <fieldset>
+                                        <div class="col-md-6 column">
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon large">Titre</span>
+                                                            {{ form_widget(form.titre, { 'attr' : { 'class' : 'form-control' } })  }}
+                                                        </div>    
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon large">Date début</span>
+                                                            {{ form_widget(form.datedebut, { 'attr' : { 'class' : 'form-control datepicker' } })  }}
+                                                            {# {{ form_widget(form.datenaissance, {'value': userdetails.datenaissance|date('d/m/Y'), 'attr' : { 'class' : 'form-control datepicker', 'placeholder' : 'Date de naissance' } })  }} #}
+                                                        </div>    
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon large">Date fin</span>
+                                                            {{ form_widget(form.datefin, { 'attr' : { 'class' : 'form-control datepicker' } })  }}
+                                                        </div>    
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon large">Adresse</span>
+                                                            {{ form_widget(form.adresse, { 'attr' : { 'class' : 'form-control' } })  }}
+                                                        </div>    
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon large">Dresscode</span>
+                                                            {{ form_widget(form.dresscode, { 'attr' : { 'class' : 'form-control' } })  }}
+                                                        </div>    
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="col-md-6 column">
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon large">Raison sociale</span>
+                                                        {{ form_widget(form.raisonsociale, { 'attr' : { 'class' : 'form-control' } })  }}
+                                                    </div>    
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon large">Description</span>
+                                                        {{ form_widget(form.description, { 'attr' : { 'class' : 'form-control' } })  }}
+                                                    </div>    
+                                                </div>
+                                            </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon large">Code postal</span>
+                                                            {{ form_widget(form.codepostal, { 'attr' : { 'class' : 'form-control' } })  }}
+                                                        </div>    
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon large">Ville</span>
+                                                            {{ form_widget(form.ville, { 'attr' : { 'class' : 'form-control' } })  }}
+                                                        </div>    
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon large">Urgent (0/1)</span>
+                                                            {{ form_widget(form.urgent, { 'attr' : { 'class' : 'form-control' } })  }}
+                                                        </div>    
+                                                    </div>
+                                                </div>
+                                        </div>                        
+                                        <input type="submit" class="btn btn-primary" value="Enregistrer"/>
+                                    {#</div>#}		
+                                {{ form_row(form._token) }}	
+                                </fieldset>
+                                </form>
+                            {#Fin formulaire saisie mission#}
+                            </div>
+                        </div> 
+
+                            {#Affichage mission#}                        
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Liste des missions
+                                </h3>
+                            </div>
+                            <div class="panel-body"> 
+                            {% set compteur = 0 %}
+                            <table>
+                            {% for mission in missions1 %}
+                                {% set compteur = compteur +1 %}
+                                {% if compteur == 1 %}
+                                <tr><td width="528">                    
+                                {% else %}
+                                <td width="528">
+                                {% endif %}                          
+                                <div class="panel panel-default">
+                                    <div style="height:270px"class="panel-body">
+                                    <table cellpadding="4" style="font-size:18px;">
+                                            <tr>
+                                                <td colspan="3"> 
+                                                    <center><h3><b>{{mission.titre}}</b></h3></center>                                                                                  
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {{mission.datedebut}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.adresse}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {{mission.datefin}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.codepostal}}
+                                                </td>
+                                            </tr>    
+                                            <tr>
+                                                <td>
+                                                    {{mission.description}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.ville}}
+                                                </td>
+                                            </tr>          
+                                            <tr>
+                                                <td>
+                                                    {{mission.dresscode}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.raisonsociale}}
+                                                </td>
+                                            </tr> 
+                                            <tr>
+                                            <center><span>Urgent</span></center>
+                                            </tr>                             
+                                    </table>
+                                    </div>   
+                                    <center><span class="pull-left">{{ mission.nbaccepte }} {% if mission.nbaccepte > 1 %} employés sur cette mission{% else %} employé sur cette mission{% endif %}
+                                    {#({% for missionp in missionpostule %}
+                                    {% if missionp.missionid == mission.id %}
+                                    {% for user in users %}
+                                    {% if user.id == missionp.profilid %}
+                                        <a href="{{ path('bacloocrm_agence', {'onglet': 'profils', 'nom': user.nom }) }}">{{ user.nom }} {{ user.prenom }}</a>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% endfor %})#}
+                                    </span></center>
+                                    <span class="pull-right"><a type="button" class="btn btn-danger" 
+                                    href="{{ path('bacloocrm_removemission', {'id': mission.id}) }}">Supprimer</span></a></span>                                    
+                                    </div>
+                                </div>
+                                {% if compteur == 3 %}
+                                </td>
+                                </tr> 
+                                {% set compteur = 1 %}  
+                                
+                                {% else %}
+                                </td>
+                                    {% if compteur == 1 or compteur == 2 %}
+                                    <td width="15">
+                                    </td>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            </table>
+                            <br><br>
+      
+                            {% set compteur = 0 %}
+                            <table>
+                            {% for mission in missions0 %}
+                                {% set compteur = compteur +1 %}
+                                {% if compteur == 1 %}
+                                <tr><td width="528">                     
+                                {% else %}
+                                <td width="528">
+                                {% endif %}                          
+                                <div class="panel panel-default">
+                                    <div style="height:270px"class="panel-body">
+                                    <table cellpadding="4" style="font-size:18px;">
+                                            <tr>
+                                                <td colspan="3"> 
+                                                    <center><h3><b>{{mission.titre}}</b></h3></center>                                                                                  
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {{mission.datedebut}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.adresse}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {{mission.datefin}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.codepostal}}
+                                                </td>
+                                            </tr>    
+                                            <tr>
+                                                <td>
+                                                    {{mission.description}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.ville}}
+                                                </td>
+                                            </tr>          
+                                            <tr>
+                                                <td>
+                                                    {{mission.dresscode}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.raisonsociale}}
+                                                </td>
+                                            </tr>                            
+                                    </table>
+                                    </div>   
+                                    <center><span class="pull-left">{{ mission.nbaccepte }} {% if mission.nbaccepte > 1 %} employés sur cette mission{% else %} employé sur cette mission{% endif %}
+                                    {#({% for missionp in missionpostule %}
+                                    {% if missionp.missionid == mission.id %}
+                                    {% for user in users %}
+                                    {% if user.id == missionp.profilid %}
+                                        <a href="{{ path('bacloocrm_agence', {'onglet': 'profils', 'nom': user.nom }) }}">{{ user.nom }} {{ user.prenom }}</a>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% endfor %})#}
+                                    </span></center>
+                                    <span class="pull-right"><a type="button" class="btn btn-danger" 
+                                    href="{{ path('bacloocrm_removemission', {'id': mission.id}) }}">Supprimer</span></a></span>                                    
+                                    </div>
+                                </div>
+                                {% if compteur == 3 %}
+                                </td>
+                                </tr> 
+                                {% set compteur = 1 %}  
+                                
+                                {% else %}
+                                </td>
+                                    {% if compteur == 1 or compteur == 2 %}
+                                    <td width="15">
+                                    </td>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            </table>
+                            </div>
+                        </div>
+                            {#Fin affichage mission#}
+                    </div>
+                {% if onglet == 'profils' %}
+                    <div class="tab-pane fade in active" id="tab2default">
+                {% else %}
+                    <div class="tab-pane fade" id="tab2default">  
+                {% endif %}
+                    {#Affichage PROFILS#}                        
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Liste des profils des employés
+                                </h3>
+                            </div>
+										
+                            <div class="panel-body"> 
+                            {#Formulaire recherche profil #}
+                            <div class="panel-body">   
+                                <form class="form-horizontal" action="{{ path('bacloocrm_agence', {'onglet': 'profils'}) }}" method="post" {{form_enctype(form2) }}>
+                                    <fieldset>
+                                        <div class="col-md-3 column">
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon large">Nom</span>
+                                                        {{ form_widget(form2.nom, { 'attr' : { 'class' : 'form-control' } })  }}
+                                                    </div>    
+                                                </div>
+                                            </div>
+                                        </div>                        
+                                        <input type="submit" class="btn btn-primary" value="Rechercher"/>
+                                        <a type="button" class="btn btn-info" href="{{ path('bacloocrm_agence', {'onglet': 'profils', 'nom': 0}) }}">Réinitialiser</span></a>
+                                    {#</div>#}		
+                                {{ form_row(form2._token) }}	
+                                </fieldset>
+                                </form>
+                            </div>
+                            {#Fin recherche profil #}
+                            {% set compteur = 0 %}
+                            <table>
+                            {% for user in users %}
+                                {% if user.roleuser == 'employe' %}
+                                    {% set compteur = compteur +1 %}
+                                    {% if compteur == 6 %}
+                                    <tr>                              
+                                    {% else %}
+                                    <td width="235">
+                                    {% endif %}                               
+                                    <div class="panel panel-default">
+                                        <div style="height:400px" class="panel-body">
+                                        <table cellpadding="4" style="font-size:18px;" border="0">
+                                                <tr>
+                                                    <td colspan="3"> 
+                                                        <center><h3><b>{{user.prenom}} {{user.nom}}</b></h3></center>                                                                                  
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        {{user.datenaissance|date('d/m/Y')}}
+                                                    </td>
+                                                    <td style="width:15px"></td>
+                                                    <td>
+                                                        {{user.adresse}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        {{user.email}}
+                                                    </td>
+                                                    <td style="width:15px"></td>
+                                                    <td>
+                                                        {{user.tel}}
+                                                    </td>
+                                                </tr> 
+                                                <tr>
+                                                    {% set count = 0 %}        
+                                                    {% set nomDoc = "" %}        
+
+                                                    {% for document in documents %}
+                                                         {% if document.codedocument == user.id %}
+                                                            {% set count = 1 %}
+                                                            {% set nomDoc = document.nom %}
+                                                        {% endif %}
+                                                    {% endfor %}
+
+                                                    {% if count == 1 %} 
+                                                        <td>
+                                                            <img width="200" src="{{ asset('uploads/employe/'~ user.id ~'/' ~ nomDoc ~ '') }}">
+                                                        </td>
+                                                    {% else %}
+                                                        <td>
+                                                            Pas de photo de profil
+                                                        </td>
+                                                    {% endif %}  
+
+                                                </tr>                            
+                                        </table>
+                                        </div>
+                                        {#<span class="pull-right"><a type="button" class="btn btn-danger" 
+                                        href="{{ path('bacloocrm_removemission', {'id': .id}) }}">Supprimer</span></a></span></div>#}
+                                    
+                                    {% if compteur == 6 %}
+                                    </tr>
+                                    
+                                    {% else %}
+                                    </td>
+                                        {% if compteur == 1 or compteur == 2 or compteur == 3  or compteur == 4  or compteur == 5 %}
+                                        <td width="15">
+                                        </td>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            </table>
+                            <br><br>
+                            </div>
+                        </div>
+                        {#Fin affichage PROFILS#}
+                    </div>
+                {% if onglet is not  same as('missions') and onglet is not same as ('profils') %}
+                    <div class="tab-pane fade in active" id="tab3default">
+                {% else %}
+                    <div class="tab-pane fade" id="tab3default">  
+                {% endif %}
+                    {# Affichage candidatures missions #}                        
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Candidatures
+                                </h3>
+                            </div>
+                            <div class="panel-body"> 
+                            {% set compteur = 0 %}
+                            <table>
+                            {% for mission in missionpostule2 %}
+                                {% set compteur = compteur +1 %}
+                                {% if compteur == 6 %}
+                                <tr>                              
+                                {% else %}
+                                <td width="528">
+                                {% endif %}                               
+                                <div class="panel panel-default">
+                                    <div style="height:270px"class="panel-body">
+                                    <table cellpadding="4" style="font-size:18px;">
+                                            <tr>
+                                                <td colspan="3"> 
+                                                    <center><h3><b>{{mission.titre}}</b></h3></center>                                                                                  
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {{mission.datedebut}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.adresse}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {{mission.datefin}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.codepostal}}
+                                                </td>
+                                            </tr>    
+                                            <tr>
+                                                <td>
+                                                    {{mission.description}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.ville}}
+                                                </td>
+                                            </tr>          
+                                            <tr>
+                                                <td>
+                                                    {{mission.dresscode}}
+                                                </td>
+                                                <td style="width:15px"></td>
+                                                <td>
+                                                    {{mission.raisonsociale}}
+                                                </td>
+                                            </tr> 
+
+                                            {% set nom = '' %}
+                                            {% set prenom = '' %}
+
+                                            {% for user in users %}
+                                                {% if mission.profilid == user.id %}
+                                                    {% set nom = user.nom %}
+                                                    {% set prenom = user.prenom %}                                               
+                                                {% endif %}
+                                            {% endfor %}
+                                            <tr>
+                                                <td colspan="3"> 
+                                                    <center><h3><b>Candidature de {{prenom}} {{nom}}</b></h3></center>                                                                                  
+                                                </td>
+                                            </tr>                             
+                                    </table>
+                                    </div>
+                                    {% if mission.accepte == 1 %}
+                                        <center><span>Accepté</span></center>
+                                    {% elseif mission.refuse == 1 %}
+                                        <center><span>Refusé</span></center>
+                                    {% else %}
+                                        <span class="pull-left"><a type="button" class="btn btn-success" 
+                                        href="{{ path('bacloocrm_acceptercandidature', {'id': mission.id}) }}">Accepter</span></a></span>
+                                        <span class="pull-right"><a type="button" class="btn btn-danger" 
+                                        href="{{ path('bacloocrm_refusercandidature', {'id': mission.id}) }}">Refuser</span></a></span>                                          
+                                    {% endif %}
+                                </div>
+                                {% if compteur == 4 %}
+                                </tr>
+                                
+                                {% else %}
+                                </td>
+                                    {% if compteur == 1 or compteur == 2 %}
+                                    <td width="15">
+                                    </td>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            </table>
+                            <br><br>
+                            </div>
+                        </div>
+                    {# Fin affichage candidatures missions #}
+                    </div>
+                </div>
+        </div>
+		<div class="col-md-12">
+        </div>
+    </div>
+
+<script>
+  $( function() {
+	$( ".datepicker" ).datepicker({
+		dateFormat: 'dd/mm/yy', 
+		firstDay:1			
+	});
+  } );
+</script>
+
+{% endblock %}
+

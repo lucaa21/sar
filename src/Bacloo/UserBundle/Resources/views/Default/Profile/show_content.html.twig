@@ -1,0 +1,173 @@
+ 
+{% block User_body %}
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<table>
+						<tr>
+							<td class="col-md-12">
+								<h3>
+									Votre profil
+								</h3>
+							</td>
+							<td class="col-md-6">
+								 
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="tabbable" id="tabs-421784">
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="#panel-375202" data-toggle="tab">Messages</a>
+					</li>				
+					<li>
+						<a href="#panel-125027" data-toggle="tab">Profil</a>
+					</li>
+					<li>
+						<a href="#panel-125024" data-toggle="tab">Finances</a>
+					</li>
+					<li>
+						<a href="#panel-125030" data-toggle="tab">Mes Collègues</a>
+					</li>
+					<li>
+						<a href="#panel-125025" data-toggle="tab">Mes achats</a>
+					</li>
+					<li>
+						<a href="#panel-125026" data-toggle="tab">Mes ventes</a>
+					</li>
+					<li>
+						<a href="#panel-125029" data-toggle="tab">Mes crédits</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div  class="tab-pane active" id="panel-375202">						
+						{{ render(controller("BaclooCrmBundle:Crm:showmessages" )) }}											
+					</div>
+					<div class="tab-pane" id="panel-125024">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<table class="table borderless">
+									<tr>
+										<td class="col-md-3">
+											<h4>{{ 'profile.show.credits'|trans({}, 'FOSUserBundle') }}  :</h4>
+										</td>
+										<td class="col-md-9">
+											<h4>{{ user.credits }}    <a href="#" class="btn btn-success" role="button">Virer mes crédits sur mon compten banque</a> </h4>											
+										</td>
+									</tr>
+									<tr>
+										<td class="col-md-3">
+											<h4>{{ 'profile.show.name'|trans({}, 'FOSUserBundle') }}  :</h4>
+										</td>
+										<td class="col-md-9">
+											<h4>{{ user.nom }}</h4>
+										</td>
+									</tr>
+									<tr>
+										<td class="col-md-3">
+											<h4>{{ 'profile.show.firstname'|trans({}, 'FOSUserBundle') }}  :</h4>
+										</td>
+										<td class="col-md-9">
+											<h4>{{ user.prenom }}</h4>
+										</td>
+									</tr>									
+								</table>
+							</div>
+							<div class="panel-footer">
+								Panel footer
+							</div>
+						</div>							
+					</div>
+					<div class="tab-pane" id="panel-125030">
+							{{ render(controller("BaclooCrmBundle:Crm:showfavoris" )) }}							
+					</div>
+					<div class="tab-pane" id="panel-125025">
+							{{ render(controller("BaclooCrmBundle:Crm:showachats", {'dix': 1} )) }}							
+					</div>
+					<div class="tab-pane" id="panel-125026">
+							{{ render(controller("BaclooCrmBundle:Crm:showventes" )) }}							
+					</div>
+					<div class="tab-pane" id="panel-125027">
+						<div class="panel panel-default">					
+							<div class="panel-body">
+								<a class="btn btn-primary pull-right" href="{{ path('fos_user_profile_edit') }}">{{ 'profile.edit.edit'|trans({}, 'FOSUserBundle') }}</a>							
+								<table class="table borderless">
+									<tr>
+										<td class="col-md-3">
+											<h4>{{ 'profile.show.username'|trans({}, 'FOSUserBundle') }}  :</h4>
+										</td>
+										<td class="col-md-9">
+											<h4>{{ user.username }}</h4>
+										</td>
+									</tr>
+									<tr>
+										<td class="col-md-3">
+											<h4>{{ 'profile.show.email'|trans({}, 'FOSUserBundle') }}  :</h4>
+										</td>
+										<td class="col-md-9">
+											<h4>{{ user.email }}</h4>
+										</td>
+									</tr>
+									<tr>
+										<td class="col-md-3">
+											<h4>{{ 'profile.show.activity'|trans({}, 'FOSUserBundle') }}  :</h4>
+										</td>
+										<td class="col-md-9">
+											<h4>{{ user.activite }}</h4>
+										</td>
+									</tr>
+									<tr>
+										<td class="col-md-3">
+											<h4>{{ 'profile.show.targeted_opportunity'|trans({}, 'FOSUserBundle') }}  :</h4>
+										</td>
+										<td class="col-md-9">
+											<h4>{{ user.descRech }}</h4>
+										</td>
+									</tr>
+									<tr>
+										<td class="col-md-3">
+											<h4>{{ 'profile.show.opportunity_tags'|trans({}, 'FOSUserBundle') }}  :</h4>
+										</td>
+										<td class="col-md-9">
+											<h4>{{ user.tags }}</h4>
+										</td>
+									</tr>
+									<tr>
+										<td class="col-md-3">
+											<h4>{{ 'profile.show.targeted_activity'|trans({}, 'FOSUserBundle') }}  :</h4>
+										</td>
+										<td class="col-md-9">
+											<h4>{{ user.actvise }}</h4>
+										</td>
+									</tr>
+									<tr>
+										<td class="col-md-3">
+											<h4>{{ 'profile.show.note'|trans({}, 'FOSUserBundle') }}  :</h4>
+										</td>
+										<td class="col-md-9">
+											<h4>{% if user.note < 1 %}Vous n'avez pas encore été évalué.{% else %}{{ user.note }} {% endif %}</h4>
+										</td>
+									</tr>
+								</table>
+
+								<p>: </p>
+							</div>
+							<div class="panel-footer">
+								
+							</div>	
+						</div>
+					</div>
+					<div class="tab-pane" id="panel-125029">
+							{{ render(controller("BaclooCrmBundle:Crm:showachatscredits" )) }}							
+					</div>					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

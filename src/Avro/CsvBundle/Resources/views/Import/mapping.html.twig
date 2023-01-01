@@ -1,0 +1,92 @@
+{% extends "BaclooCrmBundle::layout.html.twig" %}
+{% block body %}
+	{% block content %}
+	<div class="container-fluid">
+		<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="page-header">
+							<div class="alert alert-warning">
+							  <h4>Aperçu de l'importation : Vérification !</h4>
+							  Veuillez bien vérifier que les colonnes de vos données correspondent bien
+							  au bon titre de colonne.
+							  <br> !!! ATTENTION !!! Si les données ci-dessous ne s'affichent pas dans un tableau correctement formaté, cliquez sur "Retour"
+							  et modifiez le caractère de séparation.
+							</div>
+						</div>
+						<form class="form-horizontal" action="{{ path('avro_csv_import_process', {'alias': alias, 'id':id}) }}" method="post" {{ form_enctype(form) }}>
+							<div id="error-container"></div>
+							<div class="form-content">
+							<center>
+
+								<table class="table-styled table-bordered table-striped table-rounded col-md-12 column">
+									<thead>
+										{% set fieldChoice = form_widget(form.fields.vars.prototype) %}
+										<tr class="collection-item">
+											{% for header in headers %}
+												{% set index = loop.index0 %}							
+													<th>{{ header }}</th>
+											{% endfor %}
+										</tr>
+
+
+									</thead>
+									<tbody class="collection">
+															
+											<tr class="collection-item">
+												{% for row in rows %}
+													<td>{{ row | raw}}</td>
+												{% endfor %}							
+											</tr>
+
+									</tbody>
+								</table>
+							</center>
+							<div class="hide">
+								{{ form_row(form.delimiter) }}
+								{{ form_row(form.filename) }}
+							</div>
+							<table class="table-styled table-bordered table-striped table-rounded">
+							{{ form_widget(form._token) }}
+							</div>
+							<div class="form-actions">
+								<br><br><br><br>
+								
+								<button type="submit" class="btn btn-large btn-primary"><i class="icon-ok icon-white"></i> Import CSV</button>
+								<a href="{{ path('bacloocrm_import', {'alias': alias}) }}" class="btn"><i class="icon-arrow-left"></i> Retour</a>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="panel-footer">
+				</div>
+			</div>
+		</div>
+	</div>					
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var headers = {{ headersJson | raw }};
+				var fieldSelectors = $('form .collection').find('select');
+				$.each(headers, function(k, v) {
+					$(fieldSelectors[k]).find('option[value="' + v + '"]').attr('selected', 'selected');
+				});
+
+				$('form').submit(function() {
+					// rename collection items
+					$(this).find('.collection').each(function() {
+						var itemIndex = 0;
+						$(this).find('.collection-item').each(function() {
+							$(this).find('input, select, textarea').each(function() {
+								if ($(this).attr('id') && $(this).attr('name')) {
+									$(this).attr('id', $(this).attr('id').replace(/__name__/g, itemIndex));
+									$(this).attr('name', $(this).attr('name').replace(/__name__/g, itemIndex));
+								}
+							});
+							itemIndex++;
+						});
+					});
+				})
+			});
+		</script>
+	{% endblock %}
+{% endblock %}

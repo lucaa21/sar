@@ -1,0 +1,10 @@
+services:
+    bacloo_user.registration.form.type:
+        class: Bacloo\UserBundle\Form\RegistrationFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: bacloo_user_registration }
+    bacloo_user.profile.form.type:
+        class: Bacloo\UserBundle\Form\ProfileFormType
+        tags:
+            - { name: form.type, alias: bacloo_user_profile }

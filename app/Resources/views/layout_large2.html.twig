@@ -1,0 +1,107 @@
+{# app/Resources/views/layout.html.twig #}
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>{% block title %}Bacloo{% endblock %}</title>
+	{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}"type="text/css" />
+	<link rel="stylesheet" href="{{ asset('css/jquery-ui-1.10.4.custom.css') }}"type="text/css" />
+	<link rel="stylesheet" href="{{ asset('css/jquery-ui-1.10.4.custom.min.css') }}"type="text/css" />
+	<link href="{{ asset('css/full.css') }}" rel="stylesheet">
+	<link rel="stylesheet"  href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css" type="text/css" media="all"/>
+	<link rel="icon" href="{{ asset('favicon.ico') }}" />
+	{% endblock %}
+
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.ui.datepicker-fr.js') }}"></script>
+
+
+	</head>
+	<body>
+		<div class="container-full">
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+						<div class="navbar-header">
+							 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> BACLOO</a>
+						</div>
+						
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							{% if app.user is not empty %}
+								<ul class="nav navbar-nav">
+									<li class="hover">
+										<a href="{{ path('bacloocrm_ajouter') }}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Ajouter une fiche</a>
+									</li>
+									<li>
+										<a href="{{ path('bacloocrm_search') }}"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Rechercher une fiche</a>
+									</li>
+								</ul>
+								<ul class="nav navbar-nav navbar-right">
+									<li>
+										<a href="{{ path('fos_user_security_logout') }}"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Déconnecter     </a>
+									</li>
+								</ul>
+							{% else %}
+								<ul class="nav navbar-nav navbar-right">
+									<li>
+										<a href="{{ path('fos_user_security_login') }}"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Se connecter        </a>
+									</li>
+									<li>
+										<a href="{{ path('fos_user_registration_register') }}"><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span> S'enregistrer       </a>
+									</li>									
+								</ul>							
+							{% endif %}
+						</div>				
+					</nav></br></br></br>
+
+					{% block body %}
+					{% endblock %}
+					
+				</div>
+			</div>
+		</div>
+
+					{% block body2 %}
+					{% endblock %}	
+				
+		<footer>
+
+		</footer>
+
+		{% block javascripts %}
+		{# Ajoutez ces lignes JavaScript si vous comptez vous servir des
+		fonctionnalités du bootstrap Twitter #}
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="{{ asset('js/bootstrap.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('js/jquery-ui-1.10.4.custom.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('js/jquery-ui-1.10.4.custom.min.js') }}"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-65993029-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  	
+			
+		{% endblock %}	
+		<!--Start of Tawk.to Script-->
+		<script type="text/javascript">
+		var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+		(function(){
+		var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+		s1.async=true;
+		s1.src='https://embed.tawk.to/56fb98c1c65bb7c80a98e802/default';
+		s1.charset='UTF-8';
+		s1.setAttribute('crossorigin','*');
+		s0.parentNode.insertBefore(s1,s0);
+		})();
+		</script>
+		<!--End of Tawk.to Script-->
+	</body>
+</html>

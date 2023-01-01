@@ -1,0 +1,51 @@
+bacloocrm_accueil:
+    path:     /
+    defaults: { _controller: FOSUserBundle:Security:login}
+
+bacloocrm_home:
+    path:     /accueil
+    defaults: { _controller: BaclooCrmBundle:Crm:accueil}
+
+bacloocrm_agence:
+    path:	  /liste_des_missions_agence/{onglet}/{nom}
+    defaults: { _controller: BaclooCrmBundle:Crm:agence, onglet: 'missions', nom: 0}
+
+bacloocrm_employe:
+    path:	  /liste_des_missions_employe/
+    defaults: { _controller: BaclooCrmBundle:Crm:employe}
+
+bacloocrm_removemission:
+    path:	  /supprimer_mission/{id}/{check}
+    defaults: { _controller: BaclooCrmBundle:Crm:removemission, check: 0}
+
+bacloocrm_postulermission:
+    path:	  /postuler_mission/{id}/{check}
+    defaults: { _controller: BaclooCrmBundle:Crm:postulermission, check: 0}
+
+bacloocrm_acceptercandidature:
+    path:	  /accepter_candidature/{id}/{check}
+    defaults: { _controller: BaclooCrmBundle:Crm:acceptercandidature, check: 0}
+
+bacloocrm_refusercandidature:
+    path:	  /refuser_candidature/{id}/{check}
+    defaults: { _controller: BaclooCrmBundle:Crm:refusercandidature, check: 0}
+
+bacloocrm_profilsagence:
+    path:	  /profils/
+    defaults: { _controller: BaclooCrmBundle:Crm:profilsagence}
+    
+bacloocrm_dropzone:
+  path:  /dropzone/{codedocument}/{type}
+  defaults: { _controller: BaclooCrmBundle:Crm:dropzone, codedocument:0, type:0 }
+
+bacloocrm_conditions_generales:
+    path:	  /conditions_generales
+    defaults: { _controller: BaclooCrmBundle:Crm:conditions}
+
+bacloocrm_conditions_generales_public:
+    path:	  /conditions_generales_utilisation
+    defaults: { _controller: BaclooCrmBundle:Crm:conditionspub}
+
+bacloocrm_removedocument:
+  path:  /removedocument/{iddoc}/{codedocument}/{type}
+  defaults: { _controller: BaclooCrmBundle:Crm:removedocument, codedocument:0 }

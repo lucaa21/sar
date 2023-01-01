@@ -1,0 +1,140 @@
+ 
+{% block User_body %}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">
+			<h3>Vos modules</h3>
+		</h3>
+	</div>
+	<div class="panel-body">
+			<div class="row clearfix">
+				<div class="col-md-10 column">	
+					<div class="form-group">
+					  <div class="col-md-12">
+						<div class="input-group">
+						  <span class="input-group-addon large">Crédits</span>
+						  {{ form_widget(form.credits, { 'attr' : { 'class' : 'form-control' } })  }}
+						</div> 
+					  </div>
+					  {{ form_errors(form.credits) }}
+					</div>
+				</div>
+				<div class="col-md-2 column">
+
+				</div>
+			</div>
+			<br>
+
+			<div class="form-group">
+			  <div class="col-md-12">
+				<div class="input-group">
+				  <span class="input-group-addon large">Mot de passe</span>
+				  {{ form_widget(form.current_password, { 'attr' : { 'class' : 'form-control' } })  }}
+				</div>    
+			  </div>
+			 {{ form_errors(form.current_password) }} 
+			</div>
+
+			<br><br>			
+			<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit">
+			 <fieldset> 	
+				<table id="bacloo2" class="table table-bordered">
+				<thead>
+					<tr>
+						<th>
+							Nom Du module
+						</th>
+						<th>
+							Activé
+						</th>
+						<th>
+							Date d'activation
+						</th>
+						<th>
+							Date d'expiration
+						</th>
+						<th>
+							Prix
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+						</td>
+						<td>
+						</td>
+						<td>
+						</td>
+						<td>
+						</td>
+						<td>
+						</td>
+					</tr>
+				</tbody>
+				</table>
+			{{ form_errors(form) }}	 
+				{# Les erreurs générales du formulaire. #}
+				{{ form_errors(form) }}
+
+
+
+
+			<div class="hidden">{{ form_widget(form.module1, { 'value' : 'Partage rapide de fiches' }) }}</div>
+			<div class="form-group">
+			  <div class="col-md-12">
+				<div class="input-group">
+				  <span class="input-group-addon large">Partage rapide de fiches</span>
+				  {{ form_widget(form.module1activation, { 'attr' : { 'class' : 'form-control' } })  }}
+				</div>    
+			  </div>
+			  {{ form_errors(form.module1activation) }} 
+			</div>
+
+			<br><br>
+
+			<div class="form-group">
+			  <div class="col-md-12">
+				<div class="input-group">
+				  {{ form_widget(form.module1_debut, { 'attr' : { 'class' : 'form-control' } })  }}
+				</div>    
+			  </div>
+			  {{ form_errors(form.module1_debut) }} 
+			</div>
+
+			<br><br>
+				
+			<div class="form-group">
+			  <div class="col-md-12">
+				<div class="input-group">
+				  <span class="input-group-addon large">Nom de votre société</span>
+				  {{ form_widget(form.module1_expiration, { 'attr' : { 'class' : 'form-control' } })  }}
+				</div>    
+			  </div>
+			 {{ form_errors(form.module1_expiration) }}  
+			</div>
+
+			<br><br>
+				
+			<div class="form-group">
+			  <div class="col-md-12">
+				<div class="input-group">
+				  <span class="input-group-addon large">Nom de votre société</span>
+				  {{ form_widget(form.module1prix, { 'attr' : { 'class' : 'form-control' } })  }}
+				</div>    
+			  </div>
+			 {{ form_errors(form.module1prix) }}  
+			</div>
+
+			<br><br>
+				
+				{{ form_row(form._token) }}
+				<div>
+					<input type="submit" class="btn btn-primary" value="{{ 'profile.edit.submit'|trans({}, 'FOSUserBundle') }}" />
+				</div>
+			 </fieldset>
+			</form>	
+	</div>
+</div>
+
+{% endblock %}

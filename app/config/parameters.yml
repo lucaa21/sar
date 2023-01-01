@@ -1,0 +1,23 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: sar
+    database_user: root
+    database_password: null
+    mailer_transport: mail
+    mailer_auth_mode: login
+    mailer_host: ''
+    mailer_port: ''
+    mailer_user: ''
+    mailer_password: ''
+    locale: fr
+    secret: ThisTokenIsNotSoSecretChangeIt
+    debug_toolbar: true
+    debug_redirects: false
+    use_assetic_controller: true
+    paypal.express_checkout.username: ringuetjm_api1.bacloo.fr
+    paypal.express_checkout.password: NZ6VHYPQ89K2KSKT
+    paypal.express_checkout.signature: AklwVKgp44p8duhs3UK2HU5Un7j6AV7m842TY-.drokiHHsuSQgAZZ7E
+    mailer_encryption: ssl

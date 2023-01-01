@@ -1,0 +1,139 @@
+<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit">
+ <fieldset> 
+{{ form_errors(form) }}	 
+	{# Les erreurs générales du formulaire. #}
+	{{ form_errors(form) }}
+
+<div class="row clearfix">
+	<div class="col-md-10 column">	
+		<div class="form-group">
+		  <div class="col-md-12">
+			<div class="input-group">
+			  <span class="input-group-addon large">Crédits</span>
+			  {{ form_widget(form.credits, { 'attr' : { 'class' : 'form-control' } })  }}
+			</div> 
+		  </div>
+		  {{ form_errors(form.credits) }}
+		</div>
+	</div>
+	<div class="col-md-2 column">
+
+	</div>
+</div>
+
+<br>
+	
+<div class="form-group">
+  <div class="col-md-12">
+    <div class="input-group">
+      <span class="input-group-addon large">Nom d'utilisateur</span>
+	  {{ form_widget(form.username, { 'attr' : { 'class' : 'form-control' } })  }}
+	</div>    
+  </div>
+  {{ form_errors(form.username) }}
+</div>
+
+<br><br>
+
+<div class="form-group">
+  <div class="col-md-12">
+    <div class="input-group">
+      <span class="input-group-addon large">Adresse email</span>
+	  {{ form_widget(form.email, { 'attr' : { 'class' : 'form-control' } })  }}
+	</div>    
+  </div>
+ {{ form_errors(form.email) }}
+</div>
+
+<br><br>
+
+<div class="form-group">
+  <div class="col-md-12">
+    <div class="input-group">
+      <span class="input-group-addon large">Mot de passe</span>
+	  {{ form_widget(form.current_password, { 'attr' : { 'class' : 'form-control' } })  }}
+	</div>    
+  </div>
+ {{ form_errors(form.current_password) }} 
+</div>
+
+<br><br>
+
+<div class="form-group">
+  <div class="col-md-12">
+    <div class="input-group">
+      <span class="input-group-addon large">Nom</span>
+	  {{ form_widget(form.nom, { 'attr' : { 'class' : 'form-control' } })  }}
+	</div>    
+  </div>
+  {{ form_errors(form.nom) }} 
+</div>
+
+<br><br>
+
+<div class="form-group">
+  <div class="col-md-12">
+    <div class="input-group">
+      <span class="input-group-addon large">Prénom</span>
+	  {{ form_widget(form.prenom, { 'attr' : { 'class' : 'form-control' } })  }}
+	</div>    
+  </div>
+  {{ form_errors(form.prenom) }} 
+</div>
+
+<br><br>
+	
+<div class="form-group">
+  <div class="col-md-12">
+    <div class="input-group">
+      <span class="input-group-addon large">Activité</span>
+	  {{ form_widget(form.activite, { 'attr' : { 'class' : 'form-control' } })  }}
+	</div>    
+  </div>
+ {{ form_errors(form.prenom) }}  
+</div>
+
+<br><br>
+
+<div class="form-group">
+  <div class="col-md-12">
+    <div class="input-group">
+      <span class="input-group-addon large">Opportunités recherchées</span>
+	  {{ form_widget(form.desc_rech, { 'attr' : { 'class' : 'form-control' } })  }}
+	</div> 
+	<p class="help-block">Décrivez ici les opportunités ou missions recherchées. Ceci aidera les autres utilisateurs à vous proposer des opportunités.</p>	
+  </div>
+</div>
+
+<br><br>
+
+<div class="form-group">
+  <div class="col-md-12">
+    <div class="input-group">
+      <span class="input-group-addon large">Môts clés</span>
+	  {{ form_widget(form.tags, { 'attr' : { 'class' : 'form-control' } })  }}
+	</div> 
+	<p class="help-block">Ces môts clés aideront Bacloo à vous trouver des prospects merci de les séparer par une virgule sans espace. Exemple : web,assistance information</p>	
+  </div>
+</div>
+
+<br><br>
+
+<div class="form-group">
+  <div class="col-md-12">
+    <div class="input-group">
+      <span class="input-group-addon large">Activité visée</span>
+	  {{ form_widget(form.actvise, { 'attr' : { 'class' : 'form-control' } })  }}
+	</div> 
+	<p class="help-block">Listez, en les séparant d'une virgule, les activités des prospects que vous recherchés. Une alerte apparaitra aux autres utilisateurs pour les inciter à faire la découverte de vos môts clés.</p>	
+  </div>
+</div>
+
+<br><br>
+	
+	{{ form_rest(form) }}
+    <div>
+        <input type="submit" class="btn btn-primary" value="{{ 'profile.edit.submit'|trans({}, 'FOSUserBundle') }}" />
+    </div>
+ </fieldset>
+</form>

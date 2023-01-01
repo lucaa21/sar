@@ -1,0 +1,112 @@
+{% block content %}
+<div class="container-fluid">
+	<div class="row">
+
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="page-header">
+						{% if alias == 'fiche' %}
+							<div class="alert alert-warning">
+							  <h4>Avant l'importation</h4>
+							  Votre fichier doit-être enregistré au format CSV et doit contenir les 13 colonnes suivantes dans cet ordre:
+							  <ul>
+								  <li>Raison sociale</li>
+								  <li>Champ adresse 1</li>
+								  <li>Champ adresse 2</li>
+								  <li>Champ adresse 3</li>
+								  <li>Activité</li>
+								  <li>Code Postal</li>
+								  <li>Ville</li>
+								  <li>Téléphone</li>
+								  <li>Fax</li>
+								  <li>Site Web</li>
+								  <li>Champ personnalisé 1</li>
+								  <li>Champ personnalisé 2</li>
+								  <li>Champ personnalisé 3</li>
+							  </ul>
+							</div>
+						{% elseif alias == 'contact' %}
+							<div class="alert alert-warning">
+							  <h4>Avant l'importation</h4>
+							  Votre fichier doit-être enregistré au format CSV et doit contenir les 10 colonnes suivantes dans cet ordre:
+							  <ul>
+								  <li>Civilite (Libellé : M. ou Mme)</li>
+								  <li>Nom</li>
+								  <li>Prénom</li>
+								  <li>Fonction</li>
+								  <li>Tel 1</li>
+								  <li>Tel 2</li>
+								  <li>E-mail</li>
+								  <li>Commentaire</li>
+								  <li>Entreprise</li>
+								  <li>Cp</li>
+							  </ul>
+							</div>	
+						{#{% elseif alias == 'rappels' %}
+							<div class="alert alert-warning">
+							  <h4>Avant l'importation</h4>
+							  Votre fichier doit-être enregistré au format CSV et doit contenir les 6 colonnes suivantes dans cet ordre:<br>
+							  Tâche : mettre 1 si identifié comme une tâche à faire<br>
+							  RDV : mettre 1 si identifié comme rendez-vous<br>
+							  !!! Si tâche et RDV sont à zéro, il s'agira d'une relance téléphonique
+							  <ul>
+								  <li>Date de rappel</li>
+								  <li>Texte</li>
+								  <li>Entreprise</li>
+								  <li>Tâche</li>
+								  <li>RDV</li>
+							  </ul>
+							</div>	#}				
+						{% elseif alias == 'event' %}
+							<div class="alert alert-warning">
+							  <h4>Avant l'importation</h4>
+							  Votre fichier doit-être enregistré au format CSV et doit contenir les 4 colonnes suivantes dans cet ordre:
+							  <ul>
+								  <li>Date (format : aaaa-mm-jj)</li>
+								  <li>Commentaire</li>
+								  <li>Entreprise</li>
+								  <li>Cp</li>
+							  </ul>
+							</div>				
+						{% elseif alias == 'grille' or alias == 'grillesl' %}
+							<div class="alert alert-warning">
+							  <h4>Avant l'importation</h4>
+							  Votre fichier doit-être enregistré au format CSV et doit contenir les 10 colonnes suivantes dans cet ordre:
+							  <ul>
+								  <li>Code</li>
+								  <li>Hauteur</li>
+								  <li>Description</li>
+								  <li>Loyer 1j</li>
+								  <li>Loyer 2-5j</li>
+								  <li>Loyer 6-15j</li>
+								  <li>Loyer > 15j</li>
+								  <li>Mois</li>
+								  <li>Type</li>
+								  <li>Energie</li>
+							  </ul>
+							</div>							
+						{% endif %}
+								<form role="form" action="{{ path('avro_csv_import_mapping', {'alias': alias, 'id':id}) }}" method="post" {{ form_enctype(form) }}>
+									<div id="error-container"></div>								
+										<div class="form-group">						  
+											<div class="input-group">
+											  <label for="separateur">Séparateur de colonne</label>
+											  {{ form_widget(form.delimiter, { 'attr' : { 'class' : 'form-control' } })  }}
+											</div>    					
+										</div>					
+										<div class="form-group">						
+											{{ form_row(form.file) }}
+											{{ form_row(form.filename) }}	
+											<button type="submit" class="btn btn-primary pull-right"><i class="icon-arrow-right icon-white"></i> Etape suivante >>></button><br>												
+										</div>						
+										{{ form_widget(form._token) }}		
+								</form>
+					</div>
+				</div>
+				<div class="panel-footer">
+				</div>
+			</div>
+
+	</div>
+</div>
+{% endblock %}

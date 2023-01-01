@@ -1,0 +1,278 @@
+{# app/Resources/views/layout.html.twig #}
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{% block title %}Bacloo{% endblock %}</title>
+	{% block stylesheets %}
+	<link rel="stylesheet" href="css/bootstrap.css"type="text/css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css">
+	<link rel="stylesheet" href="css/jquery-ui-1.10.4.custom.css"type="text/css" />
+	<link rel="stylesheet" href="css/jquery-ui-1.10.4.custom.min.css"type="text/css" />
+	    <!-- Custom CSS -->
+    <link href="css/sb-admin.css"type="text/css" />
+    <link href="css/morris.css"type="text/css" />
+	<link href="css/full.css" rel="stylesheet">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+
+	    <!-- Side menu -->	
+	<link href="css/slidemenu.css" rel="stylesheet">
+	
+	<link rel="stylesheet"  href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css" type="text/css" media="all"/>
+	<link rel="icon" href="favicon.ico" />
+	{% endblock %}
+	
+
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script type="text/javascript" src="js/jquery.ui.datepicker-fr.js"></script>
+<script type="text/javascript" src="{{ asset('js/jquery-ui-1.10.4.custom.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery-ui-1.10.4.custom.min.js') }}"></script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+<!-- AddThisEvent -->
+<script type="text/javascript" src="https://addthisevent.com/libs/1.6.0/ate.min.js"></script>
+		<!-- AddThisEvent theme css -->
+		<link rel="stylesheet" href="{{ asset('css/addthisevent.theme8.css') }}" type="text/css" media="screen" />
+
+		<!-- AddThisEvent -->
+		<script type="text/javascript" src="https://addthisevent.com/libs/ate-latest.min.js"></script>
+
+		<!-- AddThisEvent Settings -->
+		<script type="text/javascript">
+		addthisevent.settings({
+			license    : "replace-with-your-licensekey",
+			css        : false,
+			outlook    : {show:true, text:"Outlook"},
+			google     : {show:true, text:"Google Agenda <em>(en ligne)</em>"},
+			yahoo      : {show:true, text:"Yahoo <em>(en ligne)</em>"},
+			outlookcom : {show:true, text:"Outlook.com <em>(en ligne)</em>"},
+			appleical  : {show:true, text:"Calendrier Apple"},
+			dropdown   : {order:"appleical,google,outlook,outlookcom,yahoo"}
+		});
+		</script>
+
+
+	</head>
+	<body>
+		<div class="bacloo-section">
+		  <div class="marges">		
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<nav class="navbar navbar-default navbar-static-top" role="navigation">
+						<div class="navbar-header">
+							 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+							 <a class="navbar-brand" href="{{ path('bacloocrm_home') }}"><i class="fa fa-home" aria-hidden="true"></i></a>
+							 <a class="navbar-brand" href="{{ path('bacloocrm_search') }}">Fichier</a>
+						</div>
+						
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav">
+								<li class="hover">
+									<a href="{{ path('bacloocrm_ajouter') }}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Ajouter une fiche</a>
+								</li>
+								<li class="dropdown">
+									 {# <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-search" aria-hidden="true"></span><strong class="caret"></strong></a> #}
+									<ul class="dropdown-menu">
+										<li>
+											<a href="{{ path('bacloocrm_searchbacloo', {'mode' : 'allprosp'}) }}"><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Prospects</a>
+										</li>
+										<li class="divider">
+										</li>
+										<li>											
+											<a href="{{ path('bacloocrm_searchuser', {'mode' : 'bigsearch'}) }}"><i class="fa fa-users" aria-hidden="true"></i> Partenaires</a>
+										</li>
+									</ul>
+								</li>
+								<li class="dropdown">
+									 {# <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Prospects<strong class="caret"></strong></a> #}
+									<ul class="dropdown-menu">
+										<li>
+											<a href="{{ path('bacloocrm_searchbacloo', {'mode' : 'prospavc'}) }}"><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> + <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Achat Prospects avec contacts</a>
+										</li>
+										<li class="divider">
+										</li>
+										<li>											
+											<a href="{{ path('bacloocrm_searchbacloo', {'mode' : 'prospssc'}) }}"><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> - <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Achat Prospects avec n° du standard seul</a>
+										</li>
+									</ul>
+								</li>								
+								<li>
+<div style="padding-top:13px">	
+	{# {{ render(controller("BaclooCrmBundle:Crm:showprospot", {'mode': 'noaccueil'})) }} #}
+</div>
+								</li>
+								<li>
+<div style="padding-top:13px; padding-left:20px;">
+	{# <a type="button" class="btn btn-success btn-xs" href="{{ path('bacloocrm_listficheint') }}">
+	<span>{{ render(controller("BaclooCrmBundle:Crm:compteficheint" )) }}</span></a> #}
+</div>
+								</li>
+								<li>
+<div style="padding-top:13px; padding-left:20px;">
+	{# <a type="button" class="btn btn-info btn-xs" href="{{ path('bacloocrm_showpartpotlist', {'modepart' : 'partpot'}) }}">
+	<span>{{ render(controller("BaclooCrmBundle:Crm:showpartpot" )) }}</span></a> #}
+</div>	
+								</li>
+								<li>
+									{# {{ render(controller("BaclooCrmBundle:Crm:showpartat" )) }} #}
+								</li>								
+							</ul>
+							<ul class="nav navbar-nav navbar-right">
+								<li class="hover">
+									{% if app.user.roleuser == 'admin' %} <a href="{{ path('bacloocrm_store') }}"><span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>{{ render(controller("BaclooCrmBundle:Crm:showpoints" )) }}</a>{% endif %}
+								</li>
+								<li class="hover">
+									{# <a href="{{ path('bacloocrm_contact') }}"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span> Contact</a> #}
+								</li>								
+								<li>
+									{# {{ render(controller("BaclooCrmBundle:Crm:newmessage" )) }} #}
+								</li>
+								<li class="dropdown">
+									 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> <b>{{ app.security.getToken().getUser() }}</b><strong class="caret"></strong></a>
+									<ul class="dropdown-menu">
+										<li>
+											<a href="{{ path('fos_user_profile_edit') }}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Mon Compte</a>
+										</li>
+										<li class="divider"></li>
+										<li>
+											<a href="{{ path('bacloocrm_modules') }}"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Mes modules</a>
+										</li>										
+										{% if app.user.roleuser == 'admin' %} 
+											<li class="divider"></li>
+											<li>
+												<a href="{{ path('bacloocrm_utilisateurs') }}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Gérer les utilisateurs</a>
+											</li>
+											<li class="divider"></li>
+											<li>
+												<a href="{{ path('fos_user_change_password') }}"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Modifier mon mot de passe</a>
+											</li>
+										{% endif %}											
+										<li class="divider">
+										</li>
+										<li>											
+											{# <a href="{{ path('bacloocrm_mesmessages') }}"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Mes Messages</a> #}
+										</li>
+										{# {{ render(controller("BaclooCrmBundle:Crm:colleguetemp" )) }}
+										<li class="divider">
+										</li> #}	
+										<li>											
+											{# <a href="{{ path('bacloocrm_showpartlist', {'modepart' : 'partenaires'}) }}"><i class="fa fa-users" aria-hidden="true"></i> Mes Partenaires</a> #}
+										</li>
+										{# <li class="divider">
+										</li> #}	
+										<li>											
+											{# <a href="{{ path('bacloocrm_showachats', {'dix' : '1'}) }}"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Mes Achats de prospects</a> #}
+										</li>
+										{# <li class="divider">
+										</li> #}	
+										<li>											
+											{# <a href="{{ path('bacloocrm_showventes') }}"><span class="glyphicon glyphicon-export" aria-hidden="true"></span> Mes Ventes de prospects</a> #}
+										</li>
+										{# <li class="divider">
+										</li> #}	
+										<li>											
+											{# <a href="{{ path('bacloocrm_showachatscredits') }}"><span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span> Historique Points</a> #}
+										</li>
+										{# <li class="divider">
+										</li> #}										
+										<li>											
+											{# <a href="{{ path('bacloocrm_showlistinvitations') }}"><i class="fa fa-paper-plane"></i> Invitations envoyées</a> #}
+										</li>
+										{# <li class="divider">
+										</li> #}										
+										<li>											
+											{# <a href="{{ path('bacloocrm_showlistfilleuls') }}"><i class="fa fa-user-plus"></i> Utilisateurs parrainés</a> #}
+										</li>
+										{# <li class="divider">
+										</li> #}										
+										<li>											
+											{% if app.user.roleuser == 'admin' %} <a href="{{ path('bacloocrm_import') }}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Importer des données</a>{% endif %}
+										</li>
+										{% if app.user.roleuser == 'admin' %} 
+											<li class="divider">
+											</li>										
+											<li>											
+												<a href="{{ path('bacloocrm_export') }}"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Exporter mes données</a>
+											</li>
+										{% endif %}
+									</ul>
+								</li>
+								<li>
+									{#  <a href="http://www.bacloo.fr/blog_bacloo" onclick="return ! window.open(this.href);"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> BLOG</a>  #}
+								</li>								
+								<li>
+									<a href="{{ path('fos_user_security_logout') }}"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span></a>
+								</li>
+							</ul>
+						</div>				
+					</nav>
+					
+					<!-- Fiche Body -->
+
+					{% block body %}
+					{% endblock %}
+
+				</div>
+			</div>
+		</div>
+</div>
+		<!-- Footer -->
+		<footer class="footer">
+		
+  <div class="navbar navbar-static-bottom">
+    <div class="container">
+		<center>	
+			<p>Copyright &copy; Bacloo 2017 | <a href="{{ path('bacloocrm_conditions_generales') }}">Conditions générales d'utilisation</a> | CNIL n°1927840</p>
+		</center>
+    </div>
+    
+    
+  </div>		
+		
+			<div class="container text-center">
+				
+			</div>
+		</footer>
+
+		{% block javascripts %}
+		{# Ajoutez ces lignes JavaScript si vous comptez vous servir des
+		fonctionnalités du bootstrap Twitter #}
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="{{ asset('js/bootstrap.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('js/jquery-ui-1.10.4.custom.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('js/jquery-ui-1.10.4.custom.min.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('js/jquery.slidemenu.js') }}"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-65993029-1', 'auto');
+  ga('send', 'pageview');
+
+</script>  	
+			
+		{% endblock %}	
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/56fb98c1c65bb7c80a98e802/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->	
+	</body>
+</html>

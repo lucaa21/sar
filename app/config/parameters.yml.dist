@@ -1,0 +1,30 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    # database_host: db577487283.db.1and1.com
+    # database_port: null
+    # database_name: db577487283
+    # database_user: dbo577487283
+    # database_password: lolo97300
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: symfony
+    database_user: root
+    database_password: 	
+    mailer_transport: mail
+    mailer_auth_mode:  login
+    mailer_host: auth.smtp.1and1.fr
+    mailer_port: 465
+    mailer_user: ringuetjm@bacloo.fr
+    mailer_password: lolo97300
+    mailer_encryption : tls
+
+
+    locale: fr
+    secret: ThisTokenIsNotSoSecretChangeIt
+    debug_toolbar: true
+    debug_redirects: false
+    use_assetic_controller: true
+    paypal.express_checkout.username: ringuetjm_api1.bacloo.fr
+    paypal.express_checkout.password: NZ6VHYPQ89K2KSKT
+    paypal.express_checkout.signature: AklwVKgp44p8duhs3UK2HU5Un7j6AV7m842TY-.drokiHHsuSQgAZZ7E

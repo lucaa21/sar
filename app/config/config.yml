@@ -1,0 +1,222 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: @BaclooUserBundle/Resources/config/services.yml }
+
+framework:
+    #esi:             ~
+    translator:      { fallback: "%locale%" }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+        #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    session:
+        # handler_id set to null will use default session handler from php.ini
+        handler_id:  ~
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+
+# Assetic Configuration
+assetic:
+    debug:          "%kernel.debug%"
+    use_controller: false
+    bundles:        [ ]
+    #java: /usr/bin/java
+    filters:
+        cssrewrite: ~
+        #closure:
+        #    jar: "%kernel.root_dir%/Resources/java/compiler.jar"
+        #yui_css:
+        #    jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar"
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   "%database_driver%"
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+        options:
+            # PDO::MYSQL_ATTR_INIT_COMMAND
+            1002: "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))"
+        # if using pdo_sqlite as your database driver, add the path in parameters.yml
+        # e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        # path:     "%database_path%"
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        auto_mapping: true		
+        dql:
+            string_functions:
+                # Match agains should have the path to the MatchAgainst class created in the previous step
+                MATCH_AGAINST: Bacloo\Extensions\Doctrine\MatchAgainst
+                MONTH: DoctrineExtensions\Query\Mysql\Month
+                YEAR: DoctrineExtensions\Query\Mysql\Year                
+                YEARMONTH: DoctrineExtensions\Query\Mysql\YearMonth               
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: "%mailer_transport%"
+    auth_mode:  "%mailer_auth_mode%"
+    host:      "%mailer_host%"
+    port:  "%mailer_port%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    # encryption :  "%mailer_encryption%"
+    #spool:     { type: memory }
+
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: Bacloo\UserBundle\Entity\User
+    from_email:
+        address:        bacloo@bacloo.fr
+        sender_name:    Bacloo	
+    registration:
+        form:
+            type:               bacloo_user_registration
+            handler:            fos_user.registration.form.handler.default
+            name:               fos_user_registration_form
+        confirmation:
+            from_email: # Use this node only if you don't want the global email address for the confirmation email
+                address:        bacloo@bacloo.fr
+                sender_name:    Bacloo
+            enabled:    false # change to true for required email confirmation
+            template:   FOSUserBundle:Registration:email.txt.twig
+    profile:
+        form:
+            type: bacloo_user_profile
+    service:
+        mailer:                 fos_user.mailer.default
+        email_canonicalizer:    fos_user.util.canonicalizer.default
+        username_canonicalizer: fos_user.util.canonicalizer.default
+        token_generator:        fos_user.util.token_generator.default
+        user_manager:           fos_user.user_manager.default
+
+    template:
+        engine: twig
+
+payum:
+    security:
+        token_storage:
+            Bacloo\PaymentBundle\Entity\PaymentToken: { doctrine: orm }
+
+    storages:
+        Bacloo\PaymentBundle\Entity\Payment: { doctrine: orm }
+
+    gateways:
+        paypal_express_checkout_and_doctrine_orm:
+            paypal_express_checkout_nvp:
+                username: '%paypal.express_checkout.username%'
+                password: '%paypal.express_checkout.password%'
+                signature: '%paypal.express_checkout.signature%'
+                sandbox: false
+                
+        # stripe_bacloo:
+            # stripe_checkout:
+                # factory: stripe_checkout
+                # publishable_key: 'pk_test_n0n6V0FSeU2RkBxiniGwurQR00dhFcmfW1'
+                # secret_key:      'sk_test_oDhzluJ0PvfkuonXtNwpyjwh00HguRgRuF'        
+
+services:
+    twig.extension.text:
+       class: Twig_Extensions_Extension_Text
+       tags:
+           - { name: twig.extension }
+
+    bacloo_login_listener:
+        class: Bacloo\UserBundle\Listener\BaclooLoginListener
+        arguments: [@fos_user.user_manager]
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login, method :onSecurityInteractiveLogin }
+
+    # bacloo_logout_handler:
+        # class: Bacloo\UserBundle\Listener\BaclooLogoutHandler
+        # arguments: [@fos_user.user_manager]
+
+avro_csv:
+    db_driver: orm # supports orm
+    batch_size: 15 # The batch size between flushing & clearing the doctrine object manager
+    tmp_upload_dir: "%kernel.root_dir%/../web/uploads/tmp/" # The directory to upload the csv files to
+    sample_count: 5 # The number of sample rows to show during mapping
+
+    objects: # the entities/documents you want to be able to import/export data with 
+        fiche:
+            class: Bacloo\CrmBundle\Entity\Fiche # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        contact:
+            class: Bacloo\CrmBundle\Entity\Bcontacts # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        event:
+            class: Bacloo\CrmBundle\Entity\Event # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        afacturer:
+            class: Bacloo\CrmBundle\Entity\Afacturer # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        factures:
+            class: Bacloo\CrmBundle\Entity\Factures # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        grille:
+            class: Bacloo\CrmBundle\Entity\Grille # The entity/document class
+            redirect_route: bacloocrm_importergrille # The route to redirect to after import
+        grillesl:
+            class: Bacloo\CrmBundle\Entity\Grillesl # The entity/document class
+            redirect_route: bacloocrm_importergrille # The route to redirect to after import
+        ca:
+            class: Bacloo\CrmBundle\Entity\Factures # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        calocdet:
+            class: Bacloo\CrmBundle\Entity\Locataclone # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        cavente:
+            class: Bacloo\CrmBundle\Entity\Factures # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        avoirs:
+            class: Bacloo\CrmBundle\Entity\Factures # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        cacom:
+            class: Bacloo\CrmBundle\Entity\Factures # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        avoirsparcom:
+            class: Bacloo\CrmBundle\Entity\Factures # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        extraitcompteclient:
+            class: Bacloo\CrmBundle\Entity\Factures # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        camensuelclients:
+            class: Bacloo\CrmBundle\Entity\Locataclone # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        camensuelmachines:
+            class: Bacloo\CrmBundle\Entity\Locationsclone # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        camensueltypemachines:
+            class: Bacloo\CrmBundle\Entity\Locationsclone # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+        camensueltypemachinessl:
+            class: Bacloo\CrmBundle\Entity\Locationsslclone # The entity/document class
+            redirect_route: bacloocrm_import # The route to redirect to after import
+
+white_october_tcpdf:
+    class: 'Bacloo\CrmBundle\Controller\maclasspdf'
+    
+parameters:
+    payment:
+        currency: EUR
+        decimal: true

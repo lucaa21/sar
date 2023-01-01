@@ -1,0 +1,32 @@
+<?php
+namespace Bacloo\CrmBundle\Controller;
+
+use \TCPDF;
+
+class maclasspdf extends TCPDF {
+
+    //Page header
+    public function Header() {
+        // Logo
+        $image_file = K_PATH_IMAGES.'logodemoloc.png';
+        $this->Image($image_file, 5, 5, 50, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        // Set font
+        $this->SetFont('helvetica', 'B', 20);
+        // Title
+        $this->Cell(0, 15, '', 0, false, 'C', 0, '', 0, false, 'M', 'M');
+		//set margin
+		$this->SetMargins(13, 31, 10, true);
+    }
+
+    // Page footer
+    public function Footer() {
+        // Position at 15 mm from bottom
+        $this->SetY(-20);
+        // Set font
+        $this->SetFont('helvetica', 'I', 8);
+		$html = '<span style="text-align:center;">DEMOLOC 5 chemin des fleurs, 93220 Gagny - 342 153 889 RCS BOBIGNY</span>';
+        // Page number
+        $this->writeHTMLCell(0, 0, '', '', $html, 0, 0, false, "L", true);
+        $this->Cell(0, 10, 'Page'.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+    }
+}

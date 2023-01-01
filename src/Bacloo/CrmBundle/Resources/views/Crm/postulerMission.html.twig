@@ -1,0 +1,45 @@
+{% extends "BaclooCrmBundle::layout.html.twig" %}
+{% block body %}
+{% if check == '1' %} {# QUand on a cliqué sur Supprimer #}
+	<div class="row clearfix">
+				<div class="modal-dialog">
+					<div class="modal-content">
+							<div class="modal-header">
+								 <a class="close" href="{{ previous }}">×</a>
+								<h4 class="modal-title" id="myModalLabel">
+									
+								</h4>
+							</div>
+							<div class="modal-body">
+								Êtes vous sûr de vouloir postuler cette mission ?
+							</div>
+							<div class="modal-footer">
+							<center>
+								<a class="btn btn-danger" href="{{ path('bacloocrm_postulermission', {'id': id, 'check': 'ok'}) }}"><span>Oui</span></a>  
+								<a class="btn btn-primary" href="{{ previous}}"><span>Non</span></a>
+							</center>
+							</div>
+					</div>					
+				</div>				
+	</div>
+{% else %}  {# Suppression bien effectuée #}
+	<div class="row clearfix">
+				<div class="modal-dialog">
+					<div class="modal-content">
+							<div class="modal-header">
+								 <a class="close" href="{{ path('bacloocrm_employe') }}">×</a>
+								<h4 class="modal-title" id="myModalLabel">
+									
+								</h4>
+							</div>
+							<div class="modal-body">
+								Votre candidature a bien été prise en compte.
+							</div>
+							<div class="modal-footer">
+								<a class="btn btn-primary" href="{{ path('bacloocrm_employe') }}"><span>Fermer</span></a>
+							</div>
+					</div>					
+				</div>				
+	</div>
+{% endif %}	
+{% endblock %}

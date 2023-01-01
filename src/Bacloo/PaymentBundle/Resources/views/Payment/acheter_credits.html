@@ -1,0 +1,21 @@
+{% block title "Payment demo - Simple purchase with Paypal Express Checkout - Prepare" %}
+
+{% block content %}
+    <p>
+        This is a simple example with minimal amount of code and config.
+
+    </p>
+
+    <p>
+        {{ message|default("") }}
+    </p>
+    <hr />
+
+    <form method="POST">
+        {{ form_widget(form) }}
+
+        <input type="submit" value="Pay" />
+    </form>
+{% endblock %}
+
+{% set code = code(_self, gatewayName) %}

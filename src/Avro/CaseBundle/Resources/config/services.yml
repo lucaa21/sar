@@ -1,0 +1,4 @@
+services:
+    avro_case.converter:
+        class: Avro\CaseBundle\Util\CaseConverter
+

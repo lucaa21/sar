@@ -1,0 +1,12 @@
+services:
+    crm.CrmController:
+        class: CrmBundle\Controller\CrmController
+        
+    crm.client.stripe:
+    class: CrmBundle\Client\StripeClient
+    arguments: ['%stripe_secret_key%', '%payment%', '@doctrine.orm.entity_manager', '@logger']
+    
+    bacloo.form.registration:
+        class: Bacloo\Form\RegistrationFormType
+        tags:
+            - { name: form.type, alias: bacloo_user_registration }

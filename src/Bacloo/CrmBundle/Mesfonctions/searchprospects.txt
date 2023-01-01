@@ -1,0 +1,8 @@
+<?php
+// src/OC/PlatformBundle/Antispam/OCAntispam.php
+
+namespace Bacloo\CrmBundle\Mesfonctions;
+
+class searchfiche_init_client
+{
+}

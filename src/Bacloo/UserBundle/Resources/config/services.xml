@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <service id="bacloo_user.registration.form.type" class="Bacloo\UserBundle\Form\Type\RegistrationFormType">
+            <tag name="form.type" alias="bacloo_user_registration" />
+			<argument>%fos_user.model.user.class%</argument>
+        </service>
+
+    </services>	
+	
+    <!--
+    <services>
+        <service id="bacloo_user.example" class="Bacloo\UserBundle\Example">
+            <argument type="service" id="service_id" />
+            <argument>plain_value</argument>
+            <argument>%parameter_name%</argument>
+        </service>
+    </services>
+    -->
+</container>
